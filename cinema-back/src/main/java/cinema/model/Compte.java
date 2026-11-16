@@ -1,16 +1,19 @@
 package cinema.model;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
 import jakarta.persistence.Table;
 
 
 @Entity 
-@Table(name="compte")
-public class Compte {
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "type_compte")
+public abstract class Compte {
     @Id 
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer Id;

@@ -1,0 +1,55 @@
+package cinema.model;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+
+@Entity
+public class Utilisateur extends Compte {
+    @Column(length = 35,nullable = true)
+    private String nom;
+    @Column(length = 35,nullable = true)
+    private String prenom;
+    
+    @Embedded
+    private Adresse adresse;
+
+    public Utilisateur() {
+       
+    }
+    
+
+    public Utilisateur(Integer Id, String login, String password, String nom, String prenom, Adresse adresse) {
+        super(Id, login, password);
+        this.nom = nom;
+        this.prenom = prenom;
+        this.adresse = adresse;
+    }
+    public Utilisateur(Integer Id, String login, String password, String nom, String prenom, String numero, String voie, String ville, String cp ) {
+        super(Id, login, password);
+        this.nom = nom;
+        this.prenom = prenom;
+        this.adresse = new Adresse(numero, voie, ville,  cp);
+    }
+    public String getNom() {
+        return nom;
+    }
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+    public String getPrenom() {
+        return prenom;
+    }
+    public void setPrenom(String prenom) {
+        this.prenom = prenom;
+    }
+    public Adresse getAdresse() {
+        return adresse;
+    }
+    public void setAdresse(Adresse adresse) {
+        this.adresse = adresse;
+    }
+    
+
+    
+}
