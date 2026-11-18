@@ -1,4 +1,4 @@
-package cinema.restController;
+package cinema.restcontroller;
 
 import java.util.List;
 
