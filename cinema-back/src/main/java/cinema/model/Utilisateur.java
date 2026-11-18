@@ -6,6 +6,7 @@ import java.util.List;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Utilisateur extends Compte {
@@ -17,6 +18,7 @@ public class Utilisateur extends Compte {
     @Embedded
     private Adresse adresse;
     
+    @OneToMany
     private List<Achat> achats;
     
     public Utilisateur() {
