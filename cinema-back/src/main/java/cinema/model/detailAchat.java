@@ -5,31 +5,35 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 
 @Entity 
-@Table(name="detailAchat")
-public class detailAchat {
+@Table(name="detail_Achat")
+public class DetailAchat {
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
     @Column(nullable = false)
     private double prixAchat;
-
+    
+    @ManyToOne(optional = false)
     @Column(nullable = false)
     private Achat achat;
 
+    @ManyToOne(optional = false)
     @Column(nullable = false)
     private Place place;
 
+    @ManyToOne(optional = false)
     @Column(nullable = false)
     private Seance seance;
 
-    public detailAchat(){}
+    public DetailAchat(){}
 
-    public detailAchat(Integer id, double prixAchat, Achat achat, Place place, Seance seance) {
+    public DetailAchat(Integer id, double prixAchat, Achat achat, Place place, Seance seance) {
         this.id = id;
         this.prixAchat = prixAchat;
         this.achat = achat;
@@ -77,7 +81,4 @@ public class detailAchat {
         this.seance = seance;
     }
 
-
-
-    
 }
