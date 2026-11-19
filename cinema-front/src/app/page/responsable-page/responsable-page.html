@@ -1,0 +1,117 @@
+<section>
+  <header>
+    <div>
+      <h1>Responsables</h1>
+      <p class="subtitle">Gestion des comptes responsables.</p>
+    </div>
+    <div class="actions">
+      <button type="button" (click)="load()" [disabled]="loading() || saving()">Actualiser</button>
+      <button type="button" (click)="add()" [disabled]="saving()">Ajouter un responsable</button>
+    </div>
+  </header>
+
+  @if (error()) {
+    <p role="alert" class="error">{{ error() }}</p>
+  }
+  @if (success()) {
+    <p role="status" class="success">{{ success() }}</p>
+  }
+
+  @if (editing) {
+    <form #accountForm="ngForm" (ngSubmit)="save(accountForm)">
+      <h2>{{ selectedId === null ? 'Ajouter' : 'Modifier' }} un responsable</h2>
+      <div class="fields">
+        <label>
+          Identifiant *
+          <input
+            name="login"
+            [(ngModel)]="form.login"
+            required
+            maxlength="35"
+            pattern=".*\S.*"
+            autocomplete="off"
+          />
+        </label>
+        <label>
+          Mot de passe {{ selectedId === null ? '*' : '(facultatif)' }}
+          <input
+            type="password"
+            name="password"
+            [(ngModel)]="form.password"
+            [required]="selectedId === null"
+            maxlength="35"
+            autocomplete="new-password"
+          />
+          @if (selectedId !== null) {
+            <small>Laisser vide pour conserver le mot de passe actuel.</small>
+          }
+        </label>
+      </div>
+      <p>
+        L’affectation au cinéma se gère depuis le CRUD Cinéma. La modification du compte conserve
+        son affectation actuelle.
+      </p>
+      <div class="actions">
+        <button type="submit" [disabled]="accountForm.invalid || saving()">
+          {{ saving() ? 'Enregistrement…' : 'Enregistrer' }}
+        </button>
+        <button type="button" (click)="reset()" [disabled]="saving()">Annuler</button>
+      </div>
+    </form>
+  }
+
+  @if (pendingDelete; as account) {
+    <div class="confirmation" role="region" aria-label="Confirmation de suppression">
+      <p>Supprimer le compte « {{ account.login }} » ?</p>
+      <div class="actions">
+        <button type="button" (click)="confirmDelete()" [disabled]="saving()">
+          Confirmer la suppression
+        </button>
+        <button type="button" (click)="pendingDelete = null" [disabled]="saving()">Annuler</button>
+      </div>
+    </div>
+  }
+
+  @if (loading()) {
+    <p role="status">Chargement…</p>
+  } @else if (loaded()) {
+    <div class="table-container">
+      <table>
+        <caption>
+          Liste des responsables
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Identifiant</th>
+            <th scope="col">Cinéma</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (account of accounts(); track account.id) {
+            <tr>
+              <td>{{ account.id }}</td>
+              <td>{{ account.login }}</td>
+              <td>{{ account.cinemaNom || 'Non affecté' }}</td>
+              <td>
+                <div class="actions">
+                  <button type="button" (click)="edit(account)" [disabled]="saving()">
+                    Modifier
+                  </button>
+                  <button type="button" (click)="askDelete(account)" [disabled]="saving()">
+                    Supprimer
+                  </button>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="4">Aucun responsable enregistré.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>
