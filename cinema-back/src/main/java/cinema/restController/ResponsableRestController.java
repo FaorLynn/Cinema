@@ -5,6 +5,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -44,8 +47,17 @@ public class ResponsableRestController {
 	@PutMapping("/{id}")
 	public Responsable modifier(@PathVariable Integer id,@RequestBody Responsable responsable)
 	{
-	  responsable.setId(id);
-      daoResponsable.save(responsable);
-      return responsable;
+        Responsable existing = daoResponsable.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Compte introuvable"));
+        existing.setLogin(responsable.getLogin());
+        if (responsable.getPassword() != null && !responsable.getPassword().isBlank()) {
+            existing.setPassword(responsable.getPassword());
+        }
+        // Conserve les relations existantes : achats ou cinéma.
+        return daoResponsable.save(existing);
 	}
+    @DeleteMapping("/{id}")
+    public void supprimer(@PathVariable Integer id) {
+        daoResponsable.deleteById(id);
+    }
 }
