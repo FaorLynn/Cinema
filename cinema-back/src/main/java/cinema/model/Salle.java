@@ -5,7 +5,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+
 
 @Entity 
 @Table(name="salle")
@@ -21,13 +24,18 @@ public class Salle {
     @Column(nullable = false)
     private int capacite_max;
 
+        @ManyToOne 
+    @JoinColumn(name="cinema_id")
+    private Cinema cinema;
+
     public Salle() {
     }
 
-    public Salle(int capacite_max, Integer id, String nom) {
+    public Salle(int capacite_max, Integer id, String nom, Cinema cinema) {
         this.capacite_max = capacite_max;
         this.id = id;
         this.nom = nom;
+        this.cinema = cinema;
     }
 
     public Integer getId() {
@@ -53,6 +61,16 @@ public class Salle {
     public void setCapacite_max(int capacite_max) {
         this.capacite_max = capacite_max;
     }
+
+    public Cinema getCinema() {
+        return cinema;
+    }
+
+    public void setCinema(Cinema cinema) {
+        this.cinema = cinema;
+    }
+
+    
 
 
 
