@@ -3,13 +3,14 @@ package cinema.dto.response;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import cinema.model.Salle;
 import cinema.model.Seance;
 
 public record SeanceResponse(
         Integer id,
         LocalDate date,
         LocalTime heure,
-        SalleResponse salle,
+        Salle salle,
         FilmResponse film
 ) 
 {
@@ -18,7 +19,7 @@ public record SeanceResponse(
                 seance.getId(),
                 seance.getDate(),
                 seance.getHeure(),
-                SalleResponse.convert(seance.getSalle()),
+                seance.getSalle(),
                 FilmResponse.convert(seance.getFilm()));
 
     }
