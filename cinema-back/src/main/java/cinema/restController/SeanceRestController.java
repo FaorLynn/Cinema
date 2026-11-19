@@ -18,6 +18,7 @@ import cinema.dao.IDAOSalle;
 import cinema.dao.IDAOSeance;
 import cinema.dto.request.CreateSeanceRequest;
 import cinema.dto.response.SeanceResponse;
+import cinema.model.Film;
 import cinema.model.Salle;
 import cinema.model.Seance;
 
