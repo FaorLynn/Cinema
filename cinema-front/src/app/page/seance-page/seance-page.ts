@@ -6,6 +6,7 @@ import { Title } from '@angular/platform-browser';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { Seance } from '../../model/seance';
 import { Salle } from '../../model/salle';
+import { SeanceService } from '../../service/seance-service';
 
 @Component({
   imports: [FormsModule, AsyncPipe ],
