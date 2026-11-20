@@ -17,7 +17,7 @@ public class Place {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-    @Column(nullable = false)
+    @Column(name = "numero_rangee", nullable = false)
     private int range;
 
     @Column(nullable = false)
