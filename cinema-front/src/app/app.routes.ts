@@ -2,6 +2,9 @@ import { Routes } from '@angular/router';
 import { PlacePage } from './page/place-page/place-page';
 import { SeancePage } from './page/seance-page/seance-page';
 import { ComptePage } from './page/compte-page/compte-page';
+import { FilmsPage } from './pages/films-page/films-page';
+import { EquipePage } from './pages/equipe-page/equipe-page';
+import { ReservationsPage } from './pages/reservations-page/reservations-page';
 
 export const routes: Routes = [
   {
@@ -17,5 +20,9 @@ export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'utilisateurs' },
   { path: 'places', component: PlacePage},
   { path: 'seances', component: SeancePage},
-  { path: 'comptes', component: ComptePage}
+  { path: 'comptes', component: ComptePage},
+
+  { path: 'films', component: FilmsPage },
+  { path: 'reservations', component: ReservationsPage},
+  { path: 'equipe', component: EquipePage}
 ];

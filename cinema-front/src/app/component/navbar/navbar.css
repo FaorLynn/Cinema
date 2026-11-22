@@ -1,0 +1,124 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  --yellow: #ffce32;
+  --bg: #111212;
+  --panel: #1c1d1d;
+  --muted: #a9aaa5;
+  --line: #353633;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: #f7f5ee;
+  font-family: 'DM Sans', Arial, sans-serif;
+}
+
+button, a, select { -webkit-tap-highlight-color: transparent; }
+button, select { font: inherit; }
+button, a { cursor: pointer; }
+
+button:focus-visible,
+a:focus-visible,
+select:focus-visible {
+  outline: 3px solid var(--yellow);
+  outline-offset: 5px;
+}
+
+/* ---------- HEADER ---------- */
+header {
+  max-width: 1440px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28px 5%;
+  border-bottom: 1px solid var(--line);
+  gap: 24px;
+}
+
+.brand {
+  font-family: 'Barlow Condensed', Impact, sans-serif;
+  font-size: 25px;
+  color: white;
+  text-decoration: none;
+  line-height: 1;
+  position: relative;
+  padding-left: 43px;
+}
+.brand b { color: var(--yellow); }
+.brand small {
+  display: block;
+  font: 8px 'DM Sans', sans-serif;
+  letter-spacing: 1.3px;
+  margin-top: 9px;
+}
+
+.duck {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: var(--yellow);
+  color: #161710;
+  border-radius: 50% 50% 42% 42%;
+  width: 32px;
+  height: 30px;
+  text-align: center;
+  font: 25px Arial;
+}
+.duck:after {
+  content: '';
+  position: absolute;
+  background: #ec942a;
+  width: 15px;
+  height: 8px;
+  right: -7px;
+  top: 15px;
+  border-radius: 2px 8px 8px 2px;
+}
+
+/* ---------- NAV ---------- */
+nav { display: flex; gap: 26px; }
+
+nav a,
+nav button {
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-size: 13px;
+  padding: 14px 0;
+  text-decoration: none;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+nav a.active { color: var(--yellow); }
+
+#count {
+  background: #2d2e29;
+  border-radius: 20px;
+  padding: 2px 6px;
+  margin-left: 4px;
+}
+
+.demo {
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--muted);
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 800px) {
+  header { flex-wrap: wrap; }
+  .demo { display: none; }
+  nav { gap: 17px; }
+}
+
+@media (max-width: 520px) {
+  header { padding: 20px 6%; }
+  nav { width: 100%; justify-content: space-between; }
+  nav a, nav button { font-size: 11px; }
+}
