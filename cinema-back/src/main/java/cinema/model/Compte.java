@@ -18,10 +18,10 @@ public abstract class Compte {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer Id;
 
-    @Column(length = 35,nullable = false)
+    @Column(length = 35,nullable = false,unique = true)
     private String login;
 
-    @Column(length = 35,nullable = false)
+    @Column(nullable = false)
     private String password;
 
     public Compte() {
