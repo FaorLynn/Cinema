@@ -1,0 +1,342 @@
+{
+  "info": {
+    "name": "Cinema - Tests CRUD Film",
+    "description": "Scénario sur base locale : créer un film temporaire, le lire, le modifier et le supprimer. Lancer toute la collection dans l’ordre. Ne modifie aucun film de démonstration. Pas un test de sécurité ou de concurrence.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "01 - Lister les films",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/film"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+              "pm.test(\"La réponse est une liste\", () => pm.expect(pm.response.json()).to.be.an(\"array\"));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 - Ajouter un film temporaire",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/film",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nom\": \"{{filmTestNom}}\",\n  \"synopsis\": \"Film temporaire pour les essais CRUD. À supprimer à la fin du scénario.\",\n  \"sortie\": \"2026-11-23\",\n  \"dureeMinutes\": 100\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.collectionVariables.unset(\"filmTestId\");",
+              "pm.collectionVariables.unset(\"filmSuppressionAutorisee\");",
+              "pm.collectionVariables.set(\"filmTestNom\", \"TEST-CRUD-FILM-\" + pm.variables.replaceIn(\"{{$guid}}\"));"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200 (contrat actuel)\", () => pm.response.to.have.status(200));",
+              "const film = pm.response.json();",
+              "pm.test(\"Identifiant généré\", () => pm.expect(film.id).to.be.a(\"number\").above(0));",
+              "pm.test(\"Champs enregistrés\", () => {",
+              "  pm.expect(film.nom).to.eql(pm.collectionVariables.get(\"filmTestNom\"));",
+              "  pm.expect(film.synopsis).to.eql(\"Film temporaire pour les essais CRUD. À supprimer à la fin du scénario.\");",
+              "  pm.expect(film.sortie).to.eql(\"2026-11-23\");",
+              "  pm.expect(film.dureeMinutes).to.eql(100);",
+              "});",
+              "if (pm.response.code === 200 && Number.isInteger(film.id) && film.id > 0 && film.nom === pm.collectionVariables.get(\"filmTestNom\")) {",
+              "  pm.collectionVariables.set(\"filmTestId\", film.id);",
+              "}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 - Retrouver le film par ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/film/{{filmTestId}}"
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "if (!/^\\d+$/.test(String(pm.collectionVariables.get(\"filmTestId\") || \"\"))) {",
+              "  pm.execution.skipRequest();",
+              "  throw new Error(\"Lancer d’abord l’étape 02 pour créer le film temporaire.\");",
+              "}"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+              "const film = pm.response.json();",
+              "pm.test(\"Identifiant du film créé\", () => pm.expect(film.id).to.eql(Number(pm.collectionVariables.get(\"filmTestId\"))));",
+              "",
+              "pm.test(\"Le bon titre est retourné\", () => pm.expect(film.nom).to.eql(pm.collectionVariables.get(\"filmTestNom\")));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 - Vérifier sa présence dans la liste",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/film"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+              "pm.test(\"Le film créé est présent\", () => {",
+              "  const film = pm.response.json().find(f => f.id === Number(pm.collectionVariables.get(\"filmTestId\")));",
+              "  pm.expect(film).to.be.an(\"object\");",
+              "  pm.expect(film.nom).to.eql(pm.collectionVariables.get(\"filmTestNom\"));",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "05 - Modifier le film temporaire",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/film/{{filmTestId}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nom\": \"{{filmTestNom}} - modifie\",\n  \"synopsis\": \"Synopsis modifié pendant le test.\",\n  \"sortie\": \"2026-11-23\",\n  \"dureeMinutes\": 115\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "if (!/^\\d+$/.test(String(pm.collectionVariables.get(\"filmTestId\") || \"\"))) {",
+              "  pm.execution.skipRequest();",
+              "  throw new Error(\"Lancer d’abord l’étape 02 pour créer le film temporaire.\");",
+              "}"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+              "const film = pm.response.json();",
+              "pm.test(\"Identifiant du film créé\", () => pm.expect(film.id).to.eql(Number(pm.collectionVariables.get(\"filmTestId\"))));",
+              "",
+              "pm.test(\"La modification conserve l’ID et les nouvelles valeurs\", () => {",
+              "  pm.expect(film.nom).to.eql(pm.collectionVariables.get(\"filmTestNom\") + \" - modifie\");",
+              "  pm.expect(film.synopsis).to.eql(\"Synopsis modifié pendant le test.\");",
+              "  pm.expect(film.sortie).to.eql(\"2026-11-23\");",
+              "  pm.expect(film.dureeMinutes).to.eql(115);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "06 - Relire la modification avant suppression",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/film/{{filmTestId}}"
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "if (!/^\\d+$/.test(String(pm.collectionVariables.get(\"filmTestId\") || \"\"))) {",
+              "  pm.execution.skipRequest();",
+              "  throw new Error(\"Lancer d’abord l’étape 02 pour créer le film temporaire.\");",
+              "}"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+              "const film = pm.response.json();",
+              "pm.test(\"Identifiant du film créé\", () => pm.expect(film.id).to.eql(Number(pm.collectionVariables.get(\"filmTestId\"))));",
+              "",
+              "pm.test(\"La modification est persistée\", () => {",
+              "  pm.expect(film.nom).to.eql(pm.collectionVariables.get(\"filmTestNom\") + \" - modifie\");",
+              "  pm.expect(film.dureeMinutes).to.eql(115);",
+              "});",
+              "if (pm.response.code === 200 && film.id === Number(pm.collectionVariables.get(\"filmTestId\")) && film.nom === pm.collectionVariables.get(\"filmTestNom\") + \" - modifie\") {",
+              "  pm.collectionVariables.set(\"filmSuppressionAutorisee\", \"oui\");",
+              "}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "07 - Supprimer uniquement le film temporaire",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/api/film/{{filmTestId}}"
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "if (!/^\\d+$/.test(String(pm.collectionVariables.get(\"filmTestId\") || \"\"))) {",
+              "  pm.execution.skipRequest();",
+              "  throw new Error(\"Lancer d’abord l’étape 02 pour créer le film temporaire.\");",
+              "}"
+            ]
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "if (pm.collectionVariables.get(\"filmSuppressionAutorisee\") !== \"oui\") {",
+              "  pm.execution.skipRequest();",
+              "  throw new Error(\"Suppression bloquée : le film temporaire n’a pas été identifié à l’étape 06.\");",
+              "}"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200 (contrat actuel)\", () => pm.response.to.have.status(200));",
+              "pm.test(\"Aucun corps de réponse\", () => pm.expect(pm.response.text()).to.eql(\"\"));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "08 - Vérifier le 404 après suppression",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/film/{{filmTestId}}"
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "if (!/^\\d+$/.test(String(pm.collectionVariables.get(\"filmTestId\") || \"\"))) {",
+              "  pm.execution.skipRequest();",
+              "  throw new Error(\"Lancer d’abord l’étape 02 pour créer le film temporaire.\");",
+              "}"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 404 pour l’identifiant supprimé\", () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "09 - Vérifier l’absence dans la liste",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/film"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+              "pm.test(\"Le film supprimé est absent\", () => {",
+              "  pm.expect(pm.response.json().some(f => f.id === Number(pm.collectionVariables.get(\"filmTestId\")))).to.eql(false);",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+[
+  {
+    "nom": "Au-delà de l’orbite",
+    "synopsis": "Une astronaute suit un signal mystérieux aux confins du système solaire. Film fictif de démonstration.",
+    "sortie": "2026-11-04",
+    "dureeMinutes": 128
+  },
+  {
+    "nom": "Dernier arrêt, soleil",
+    "synopsis": "Un chauffeur et ses passagers improvisent un voyage inattendu. Film fictif de démonstration.",
+    "sortie": "2026-11-11",
+    "dureeMinutes": 102
+  },
+  {
+    "nom": "La forêt des lucioles",
+    "synopsis": "Deux enfants découvrent une forêt qui se réveille la nuit. Film fictif de démonstration.",
+    "sortie": "2026-10-28",
+    "dureeMinutes": 88
+  }
+]

@@ -1,0 +1,28 @@
+CRUD FILM — RESULTATS DU 23 NOVEMBRE 2026
+
+Version backend testée : 811f98e (main à la vérification du dépôt).
+Environnement : Java 21, Spring Boot 4.1.2, MySQL MAMP local (port 8889).
+Collection Postman exécutée avec Newman 6.2.1 sur http://localhost:8080.
+
+Compilation du backend : BUILD SUCCESS.
+Scénario HTTP final : 9 requêtes, 21 assertions, 0 échec.
+
+GET liste : 200, tableau JSON.
+POST film temporaire : 200, ID généré et valeurs reçues correctes.
+GET par ID : 200, film créé retrouvé.
+GET liste après création : film présent.
+PUT : 200, même ID et champs modifiés.
+GET après modification : modification persistée.
+DELETE du film temporaire : 200, réponse vide.
+GET après suppression : 404.
+GET liste finale : film temporaire absent, les 3 films de démonstration conservés.
+
+Données fictives : 3 films ajoutés à la base locale ; second lancement du script
+sans nouvel ajout. Aucun film préexistant modifié ni supprimé.
+
+Périmètre : tests d’API avec persistance réelle, pas tests unitaires ni validation
+complète du projet. Données invalides, liens avec séances, sécurité et concurrence
+restent hors de ce scénario. Voir README.md pour reproduire les essais.
+
+Les données MySQL locales ne sont pas transmises par Git. Le script et les corps
+JSON sont fournis pour que chaque membre puisse les ajouter chez lui.
