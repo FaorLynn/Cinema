@@ -50,6 +50,15 @@ public class Achat {
         this.dateAchat = dateAchat;
     }
 
+    public Utilisateur getUtilisateur() {
+        return utilisateur;
+    }
+
+    public void setUtilisateur(Utilisateur utilisateur) {
+        this.utilisateur = utilisateur;
+    }
+
+    
 
 
 }

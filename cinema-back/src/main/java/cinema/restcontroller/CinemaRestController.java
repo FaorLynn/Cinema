@@ -4,7 +4,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cinema.dao.IDAOCinema;
 import cinema.dao.IDAOResponsable;
-import cinema.dao.IDAOSalle;
 import cinema.dto.request.CreateCinemaRequest;
 import cinema.dto.request.UpdateCinemaRequest;
 import cinema.dto.response.CinemaResponse;

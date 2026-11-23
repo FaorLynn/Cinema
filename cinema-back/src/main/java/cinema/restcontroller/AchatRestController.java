@@ -56,6 +56,7 @@ public class AchatRestController {
         Achat achat = new Achat();
 
         achat.setDateAchat(request.dateAchat());
+        achat.setUtilisateur(request.utilisateur());
 
         achat = this.dao.save(achat);
 
@@ -68,6 +69,7 @@ public class AchatRestController {
             .orElseThrow(() -> new RuntimeException("Achat introuvable : " + id));
 
         achat.setDateAchat(request.dateAchat());
+        achat.setUtilisateur(request.utilisateur());
     
         achat = this.dao.save(achat);
 

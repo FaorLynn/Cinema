@@ -51,6 +51,7 @@ public class FilmRestController {
         film.setSynopsis(request.synopsis());
         film.setSortie(request.sortie());
         film.setDureeMinutes(request.dureeMinutes());
+        film.setGenres(request.genres());
 
         return FilmResponse.convert(dao.save(film));
     }
@@ -66,6 +67,7 @@ public class FilmRestController {
         film.setSynopsis(request.synopsis());
         film.setSortie(request.sortie());
         film.setDureeMinutes(request.dureeMinutes());
+        film.setGenres(request.genres());
 
         return FilmResponse.convert(dao.save(film));
     }

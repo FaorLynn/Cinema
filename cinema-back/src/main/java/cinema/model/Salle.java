@@ -2,6 +2,8 @@ package cinema.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -28,14 +30,18 @@ public class Salle {
     @JoinColumn(name="cinema_id")
     private Cinema cinema;
 
+    @Enumerated(EnumType.STRING)
+    private Type_Salle type;
+
     public Salle() {
     }
 
-    public Salle(int capacite_max, Integer id, String nom, Cinema cinema) {
+    public Salle(int capacite_max, Integer id, String nom, Cinema cinema, Type_Salle type) {
         this.capacite_max = capacite_max;
         this.id = id;
         this.nom = nom;
         this.cinema = cinema;
+        this.type = type;
     }
 
     public Integer getId() {
@@ -68,6 +74,14 @@ public class Salle {
 
     public void setCinema(Cinema cinema) {
         this.cinema = cinema;
+    }
+
+    public Type_Salle getType() {
+        return type;
+    }
+
+    public void setType(Type_Salle type) {
+        this.type = type;
     }
 
     
