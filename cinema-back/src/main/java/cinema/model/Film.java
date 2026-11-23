@@ -1,9 +1,12 @@
 package cinema.model;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,6 +29,9 @@ public class Film {
     private LocalDate sortie;
 
     private Integer dureeMinutes;
+
+    @Enumerated(EnumType.STRING)
+    private List<Genre> genres;
 
     public Integer getId() {
         return id;
@@ -66,4 +72,14 @@ public class Film {
     public void setDureeMinutes(Integer dureeMinutes) {
         this.dureeMinutes = dureeMinutes;
     }
+
+    public List<Genre> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(List<Genre> genres) {
+        this.genres = genres;
+    }
+
+
 }

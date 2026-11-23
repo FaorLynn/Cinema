@@ -1,15 +1,18 @@
 package cinema.dto.response;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import cinema.model.Film;
+import cinema.model.Genre;
 
 public record FilmResponse(
     Integer id,
     String nom,
     String synopsis,
     LocalDate sortie,
-    Integer dureeMinutes
+    Integer dureeMinutes,
+    List<Genre> genres
 ) {
 
     public static FilmResponse convert(Film film) {
@@ -18,7 +21,8 @@ public record FilmResponse(
             film.getNom(),
             film.getSynopsis(),
             film.getSortie(),
-            film.getDureeMinutes()
+            film.getDureeMinutes(),
+            film.getGenres()
         );
     }
 }
