@@ -1,0 +1,74 @@
+name: cinema
+
+services:
+  db:
+    image: mysql:8.4.13
+    container_name: cinema-db
+
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: cinema
+
+    volumes:
+      - db-data:/var/lib/mysql
+
+    networks:
+      - cinema
+
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      timeout: 3s
+      retries: 10
+      interval: 5s
+
+  pma:
+    image: phpmyadmin
+    container_name: cinema-pma
+
+    environment:
+      PMA_HOST: db
+
+    networks:
+      - cinema
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+  java:
+    image: cinema:back
+    build: ./cinema-back
+    container_name: cinema-back
+
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db/cinema
+
+    networks:
+      - cinema
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+  angular:
+    image: cinema:front
+    build: ./cinema-front
+    container_name: cinema-front
+
+    networks:
+      - cinema
+
+    ports:
+      - 83:80
+
+    depends_on:
+      - java
+      - pma
+
+networks:
+  cinema:
+    name: cinema
+
+volumes:
+  db-data:
+    name: cinema-db-data
