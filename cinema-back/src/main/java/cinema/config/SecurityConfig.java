@@ -67,7 +67,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> {
                 auth.requestMatchers(HttpMethod.POST, "/api/compte/auth").permitAll();
                 auth.requestMatchers(HttpMethod.POST, "/api/compte/subscribe").permitAll();
-                auth.requestMatchers("/api/**").permitAll();
+                auth.requestMatchers("/api/**").authenticated();
 
 
 
@@ -75,7 +75,7 @@ public class SecurityConfig {
                 
             );
         // Remet le HTTP Basic
-        http.httpBasic(Customizer.withDefaults());
+        
 
         // Activer le filtre de validation du jeton JWT
         http.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
