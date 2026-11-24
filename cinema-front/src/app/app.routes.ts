@@ -17,7 +17,7 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./page/responsable-page/responsable-page').then((m) => m.ResponsablePage),
   },
-  { path: '', pathMatch: 'full', redirectTo: 'utilisateurs' },
+  { path: '', pathMatch: 'full', redirectTo: 'films' },
   { path: 'places', component: PlacePage},
   { path: 'seances', component: SeancePage},
   { path: 'comptes', component: ComptePage},
