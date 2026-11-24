@@ -17,10 +17,10 @@ public class Utilisateur extends Compte {
     
     @Embedded
     private Adresse adresse;
-    
-    @OneToMany
+        
+    @OneToMany(mappedBy = "utilisateur")
     private List<Achat> achats;
-    
+        
     public Utilisateur() {
        
     }

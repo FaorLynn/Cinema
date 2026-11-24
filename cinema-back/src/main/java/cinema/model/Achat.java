@@ -8,7 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity 
@@ -22,8 +22,8 @@ public class Achat {
     @Column(nullable = false)
     private LocalDate dateAchat;
 
-    @OneToOne
-    @JoinColumn(name ="utilisateur_id")
+    @ManyToOne 
+    @JoinColumn(name ="utilisateur_id", nullable = false)
     private Utilisateur utilisateur;
 
     public Achat() {
