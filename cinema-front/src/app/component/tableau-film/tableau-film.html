@@ -1,0 +1,21 @@
+<section>
+  <h2>À l'affiche</h2>
+
+  <div class="films-ligne">
+    @for (f of films(); track f.id) {
+      <article class="film-carte">
+        <img
+      class="affiche"
+      [src]="'affiches/' + f.id + '.jpg'"
+      [alt]="'Affiche de ' + f.nom"
+      (error)="afficheParDefaut($event)"
+        />
+        <h3>{{ f.nom }}</h3>
+        <p class="infos">
+          {{ genresTexte(f) }}
+          @if (f.dureeMinutes) { · {{ dureeFormatee(f.dureeMinutes) }} }
+        </p>
+      </article>
+    }
+  </div>
+</section>
