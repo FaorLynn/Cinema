@@ -5,7 +5,7 @@ import jakarta.persistence.OneToOne;
 
 @Entity
 public class Responsable extends Compte {
-    @OneToOne
+    @OneToOne(mappedBy = "responsable")
     private Cinema cinema;
 
 

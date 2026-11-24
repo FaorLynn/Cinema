@@ -8,10 +8,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
-@Entity 
-@Table(name="detail_Achat")
+@Entity
+@Table(name = "detail_achat",uniqueConstraints = {@UniqueConstraint(columnNames = {"place_id", "seance_id"})})
 public class DetailAchat {
+
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
