@@ -1,0 +1,30 @@
+.films-ligne {
+  display: flex;               /* tous les films sur une seule ligne */
+  gap: 24px;
+  overflow-x: auto;            /* barre de défilement horizontale si ça déborde */
+  padding-bottom: 16px;
+  scroll-snap-type: x mandatory;
+}
+
+.film-carte {
+  flex: 0 0 240px;             /* largeur fixe, ne se rétrécit jamais */
+  scroll-snap-align: start;    /* la carte s'aligne proprement en scrollant */
+}
+
+.affiche {
+  display: block;
+  width: 100%;
+  aspect-ratio: 2 / 3;         /* format affiche de cinéma */
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.film-carte h3 {
+  margin: 12px 0 4px;
+}
+
+.infos {
+  margin: 0;
+  font-size: 0.85rem;
+  opacity: 0.7;
+}

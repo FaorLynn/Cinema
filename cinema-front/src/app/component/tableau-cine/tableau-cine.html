@@ -1,0 +1,10 @@
+<label for="cine">Choisis un cinéma :</label>
+
+<select id="cine" [(ngModel)]="cinemaSelectionne">
+  @for (c of cinemas; track c.id) {
+    <option [ngValue]="c">
+      {{ c.nom }}@if (c.adresse) { ({{ c.adresse.ville }}) }
+    </option>
+  }
+</select>
+
