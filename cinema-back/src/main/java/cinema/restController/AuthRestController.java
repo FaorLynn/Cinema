@@ -66,7 +66,7 @@ public class AuthRestController {
 
             // Liste des rôles / autorisations / etc.
             .claim("scope", scope)
-
+            
             .build()
         ;
         // Header - En-tête du jeton JWT

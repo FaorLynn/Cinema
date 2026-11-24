@@ -38,4 +38,22 @@ export class AuthService {
     sessionStorage.removeItem('token');
   }
 
+
+
+  public get role(): string {
+  if (!this._token) return '';
+
+  try {
+    const payload = this._token.split('.')[1];
+    // base64url → base64
+    const json = JSON.parse(atob(payload.replace(/-/g, '+').replace(/_/g, '/')));
+
+    const scope: string = json.scope ?? '';
+    const role = scope.split(' ').find(s => s.startsWith('ROLE_'));
+    return role ? role.replace('ROLE_', '') : '';
+  } catch {
+    return '';
+  }
+}
+
 }
