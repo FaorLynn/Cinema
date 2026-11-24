@@ -5,16 +5,18 @@ import { AuthService } from '../service/auth-service';
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService: AuthService = inject(AuthService);
 
-  // Si on cherche à s'authentifier, pas d'Authorization
-  if (req.url.endsWith('/auth')) {
+  // Routes publiques : pas d'Authorization
+  if (req.url.endsWith('/auth') || req.url.endsWith('/subscribe')) {
     return next(req);
   }
 
-  // Cloner la requête HTTP et la modifier pour insérer le jeton JWT
+  // Pas de token : on n'envoie pas de header du tout
+  if (!authService.token) {
+    return next(req);
+  }
+
   const request = req.clone({
-    setHeaders: {
-      'Authorization': `Bearer ${ authService.token }`
-    }
+    setHeaders: { Authorization: `Bearer ${authService.token}` }
   });
 
   return next(request);
