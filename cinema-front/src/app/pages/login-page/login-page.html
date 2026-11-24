@@ -1,0 +1,82 @@
+<div class="auth-container">
+
+    <div class="auth-header">
+        <h1>{{ isRegisterMode() ? 'Inscription' : 'Connexion' }}</h1>
+
+
+
+    </div>
+    <div class="toggle">
+        
+            <button
+        type="button"
+        [class.active]="!isRegisterMode()"
+        (click)="isRegisterMode.set( false)">
+        Connexion
+    </button>
+
+    <button
+        type="button"
+        [class.active]="isRegisterMode()"
+        (click)="isRegisterMode.set(true)">
+        Inscription
+    </button>
+        
+    </div>
+    <div class="auth-fields">
+        @if(isRegisterMode()){
+            
+            <div>
+                <label>Login <span class="required">*</span></label>
+                <input type="text" placeholder="Ton login" [(ngModel)]="formRegister.login" required  />
+                <label>Password <span class="required">*</span></label>
+                <input type="password" placeholder="Ton password" [(ngModel)]="formRegister.password"  required />
+                <label>nom <span class="required">*</span></label>
+                <input type="text" placeholder="nom" [(ngModel)]="formRegister.nom" required   />
+                <label>prenom <span class="required">*</span></label>
+                <input type="text" placeholder="prenom" [(ngModel)]="formRegister.prenom"   />
+                <label>Adresse </label>
+                <input type="text" placeholder="ville" [(ngModel)]="formRegister.adresse.ville"   />
+                <input type="text" placeholder="numero" [(ngModel)]="formRegister.adresse.numero"   />
+                <input type="text" placeholder="voie" [(ngModel)]="formRegister.adresse.voie"  />
+                <input type="text" placeholder="code Postal" [(ngModel)]="formRegister.adresse.cp"  />
+                @if (erreurRegister()) {
+                 <p class="erreur">{{ erreurRegister() }}</p>
+}
+            </div>
+            <button (click)="register()">"S'inscrire"</button>
+            
+
+        }
+        @else{
+            
+            <div>
+                <label>Login <span class="required">*</span></label>
+                <input type="text" placeholder="Title" [(ngModel)]="formAuth.login" required  />
+                <label>Password <span class="required">*</span></label>
+                <input type="password" [(ngModel)]="formAuth.password" required  />
+            </div>
+            @if (erreurAuth()) {
+                 <p class="erreur">{{ erreurAuth() }}</p>
+}
+          
+            <button (click)="login()">  Se Connecter</button>
+
+        }
+
+
+        
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+</div>

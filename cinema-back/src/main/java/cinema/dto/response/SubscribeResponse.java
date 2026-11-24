@@ -1,5 +1,5 @@
 package cinema.dto.response;
 
-public record  SubscribeResponse (Integer id, String login) {
+public record  SubscribeResponse (String message) {
     
 }

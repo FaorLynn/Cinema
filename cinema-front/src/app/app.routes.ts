@@ -5,6 +5,7 @@ import { ComptePage } from './page/compte-page/compte-page';
 import { FilmsPage } from './pages/films-page/films-page';
 import { EquipePage } from './pages/equipe-page/equipe-page';
 import { ReservationsPage } from './pages/reservations-page/reservations-page';
+import { LoginPage } from './pages/login-page/login-page';
 
 export const routes: Routes = [
   {
@@ -24,5 +25,6 @@ export const routes: Routes = [
 
   { path: 'films', component: FilmsPage },
   { path: 'reservations', component: ReservationsPage},
-  { path: 'equipe', component: EquipePage}
+  { path: 'equipe', component: EquipePage},
+  {path:'login',component:LoginPage}
 ];

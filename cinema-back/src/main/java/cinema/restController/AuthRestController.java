@@ -99,7 +99,7 @@ public class AuthRestController {
 
         this.daoCompte.save(utilisateur);
 
-        return new SubscribeResponse(utilisateur.getId(), utilisateur.getLogin());
+        return new SubscribeResponse("Nouvelle Utilisateur crée");
     }
 
 }
