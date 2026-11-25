@@ -95,4 +95,11 @@ public class SeanceRestController {
     public void delete(@PathVariable Integer id) {
         daoSeance.deleteById(id);
     }
+
+    @GetMapping("/film/{filmId}")
+public List<SeanceResponse> findByFilm(@PathVariable Integer filmId) {
+    return daoSeance.findByFilmId(filmId).stream()
+        .map(SeanceResponse::convert)
+        .toList();
+}
 }

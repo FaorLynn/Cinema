@@ -1,20 +1,21 @@
+/* ========== LA LIGNE DE FILMS ========== */
 .films-ligne {
   display: flex;               /* tous les films sur une seule ligne */
   gap: 24px;
-  overflow-x: auto;            /* barre de défilement horizontale si ça déborde */
+  overflow-x: auto;            /* scroll horizontal si ça déborde */
   padding-bottom: 16px;
   scroll-snap-type: x mandatory;
 }
 
 .film-carte {
   flex: 0 0 240px;             /* largeur fixe, ne se rétrécit jamais */
-  scroll-snap-align: start;    /* la carte s'aligne proprement en scrollant */
+  scroll-snap-align: start;
 }
 
 .affiche {
   display: block;
   width: 100%;
-  aspect-ratio: 2 / 3;         /* format affiche de cinéma */
+  aspect-ratio: 2 / 3;
   object-fit: cover;
   border-radius: 8px;
 }
@@ -27,4 +28,133 @@
   margin: 0;
   font-size: 0.85rem;
   opacity: 0.7;
+}
+
+/* ========== LE BOUTON RÉSERVER ========== */
+.btn-reserver {
+  margin-top: 12px;
+  padding: 8px 16px;
+  background: #121212;
+  color: #ffc928;
+  border: 1px solid #ffc928;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+.btn-reserver:hover {
+  background: #ffc928;
+  color: #121212;
+}
+
+/* ========== LE POP-UP ========== */
+.overlay {
+  position: fixed;             /* collé à l'écran, pas à la page */
+  inset: 0;                    /* couvre tout l'écran */
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;         /* centre le pop-up verticalement */
+  justify-content: center;     /* et horizontalement */
+  padding: 16px;
+  z-index: 1000;               /* au-dessus du reste */
+}
+
+.modal {
+  position: relative;          /* sert de repère à la croix ✕ */
+  width: 100%;
+  max-width: 750px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 32px 36px;
+  background: #161614;
+  color: #eee;
+  border: 1px solid #444;
+  border-radius: 8px;
+}
+
+.fermer {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.modal-lieu {
+  margin: 0 0 8px;
+  color: #ffc928;
+  font-size: 0.75rem;
+  font-weight: bold;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.modal-titre {
+  margin: 0 0 16px;
+  font-size: 2rem;
+  color: #fff;
+}
+
+.etapes {
+  display: flex;
+  gap: 16px;
+  margin: 0 0 24px;
+  padding: 0;
+  list-style: none;
+  font-size: 0.75rem;
+  color: #999;
+}
+.etapes .actif {
+  color: #ffc928;
+}
+
+.modal-intro {
+  margin: 0 0 16px;
+  color: #ccc;
+}
+
+/* ========== LES LIGNES DE SÉANCES ========== */
+.seances {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.seance {
+  display: flex;
+  justify-content: space-between;  
+  align-items: center;
+  width: 100%;
+  padding: 16px 18px;
+  background: #242420;
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 4px;
+  text-align: left;
+  cursor: pointer;
+}
+.seance:hover {
+  border-color: #ffc928;
+}
+
+.seance-gauche {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.seance-gauche strong {
+  font-size: 1.2rem;
+}
+.seance-gauche small {
+  color: #bbb;
+}
+
+.seance-action {
+  color: #ffc928;
+  font-size: 0.85rem;
 }

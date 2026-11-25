@@ -1,7 +1,6 @@
 import { AsyncPipe } from '@angular/common';
-import { Component,signal  } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { PlaceService } from '../../service/place-service';
 import { Title } from '@angular/platform-browser';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { Seance } from '../../model/seance';
@@ -9,7 +8,7 @@ import { Salle } from '../../model/salle';
 import { SeanceService } from '../../service/seance-service';
 
 @Component({
-  imports: [FormsModule, AsyncPipe ],
+  imports: [FormsModule, AsyncPipe],
   selector: 'app-seance-page',
   styleUrl: './seance-page.css',
   templateUrl: './seance-page.html',
@@ -21,10 +20,10 @@ export class SeancePage {
   protected formSeance!: Seance;
   protected salles = signal<Salle[]>([]);
   protected seanceSelectionne = signal<Seance | undefined>(undefined);
+
   constructor(private title: Title, private seanceService: SeanceService) {
     this.title.setTitle("Liste des seances");
     this.resetFormSeance();
-    
   }
 
   protected ajouterOuModifier() {
@@ -34,6 +33,7 @@ export class SeancePage {
 
     this.resetFormSeance();
   }
+
   protected editer(seance: Seance) {
     this.formSeance = { ...seance };
   }
@@ -43,30 +43,28 @@ export class SeancePage {
       this.seances.reload();
     });
   }
+
   protected annulerEdition() {
     this.resetFormSeance();
   }
+
   private resetFormSeance() {
-  this.formSeance = {
-    date: "",
-    heure: ""
-  };
-}
+    this.formSeance = {
+      date: "",
+      heure: ""
+    };
+  }
 
   protected afficherSalle(seance: Seance) {
+    // Deuxième clic sur la même séance : on referme
     if (seance.id === this.seanceSelectionne()?.id) {
       this.salles.set([]);
       this.seanceSelectionne.set(undefined);
       return;
     }
 
+    // La salle est déjà dans la séance (SeanceResponse), pas de requête nécessaire
     this.seanceSelectionne.set(seance);
-    this.seanceService.findSalle(seance).subscribe(salles => {
-      this.salles.set(salles);
-    });
+    this.salles.set(seance.salle ? [seance.salle] : []);
   }
 }
-
-
-
-

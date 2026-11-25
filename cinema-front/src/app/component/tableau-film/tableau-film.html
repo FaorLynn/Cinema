@@ -1,3 +1,4 @@
+<!-- PARTIE 1 : la ligne de films -->
 <section>
   <h2>À l'affiche</h2>
 
@@ -5,17 +6,61 @@
     @for (f of films(); track f.id) {
       <article class="film-carte">
         <img
-      class="affiche"
-      [src]="'affiches/' + f.id + '.jpg'"
-      [alt]="'Affiche de ' + f.nom"
-      (error)="afficheParDefaut($event)"
+          class="affiche"
+          [src]="'affiches/' + f.id + '.jpg'"
+          [alt]="'Affiche de ' + f.nom"
+          (error)="afficheParDefaut($event)"
         />
         <h3>{{ f.nom }}</h3>
         <p class="infos">
           {{ genresTexte(f) }}
           @if (f.dureeMinutes) { · {{ dureeFormatee(f.dureeMinutes) }} }
         </p>
+
+        <button type="button" class="btn-reserver" (click)="ouvrirReservation(f)">
+          Réserver ↗
+        </button>
       </article>
     }
   </div>
 </section>
+
+<!-- PARTIE 2 : le pop-up (n'existe que si un film est sélectionné) -->
+@if (filmSelectionne(); as film) {
+  <div class="overlay" (click)="fermerReservation()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <button type="button" class="fermer" (click)="fermerReservation()" aria-label="Fermer">✕</button>
+
+      <p class="modal-lieu">Séances</p>
+      <h2 class="modal-titre">{{ film.nom }}</h2>
+
+      <ol class="etapes">
+        <li class="actif">01 · La séance</li>
+        <li>02 · Vos sièges</li>
+        <li>03 · Confirmation</li>
+      </ol>
+
+      <p class="modal-intro">Choisissez votre horaire.</p>
+
+      @if (chargementSeances()) {
+        <p class="modal-intro">Chargement des séances…</p>
+      } @else if (seances().length === 0) {
+        <p class="modal-intro">Aucune séance disponible pour ce film.</p>
+      } @else {
+        <ul class="seances">
+          @for (s of seances(); track s.id) {
+            <li>
+              <button type="button" class="seance" (click)="choisirSeance(s)">
+                <span class="seance-gauche">
+                  <strong>{{ heureFormatee(s.heure) }}</strong>
+                  <small>{{ dateFormatee(s.date) }} · {{ s.salle?.nom }}</small>
+                </span>
+                <span class="seance-action">Choisir cette séance →</span>
+              </button>
+            </li>
+          }
+        </ul>
+      }
+    </div>
+  </div>
+}

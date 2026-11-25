@@ -1,6 +1,8 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, HostListener, OnInit, signal } from '@angular/core';
 import { Film } from '../../model/film';
+import { Seance } from '../../model/seance';
 import { FilmService } from '../../service/film-service';
+import { SeanceService } from '../../service/seance-service'; // adapte le chemin
 
 @Component({
   selector: 'app-tableau-film',
@@ -11,8 +13,14 @@ import { FilmService } from '../../service/film-service';
 })
 export class TableauFilmComponent implements OnInit {
   films = signal<Film[]>([]);
+  filmSelectionne = signal<Film | null>(null); // null = pop-up fermé
+  seances = signal<Seance[]>([]);
+  chargementSeances = signal(false);
 
-  constructor(private filmService: FilmService) {}
+  constructor(
+    private filmService: FilmService,
+    private seanceService: SeanceService
+  ) {}
 
   ngOnInit(): void {
     this.filmService.findAll().subscribe({
@@ -21,8 +29,51 @@ export class TableauFilmComponent implements OnInit {
     });
   }
 
+  ouvrirReservation(film: Film): void {
+    this.filmSelectionne.set(film);
+    this.seances.set([]);
 
-  // 128 -> "2h 08"
+    if (film.id == null) return;
+
+    this.chargementSeances.set(true);
+    this.seanceService.findByFilm(film.id).subscribe({
+      next: (data) => {
+        this.seances.set(data);
+        this.chargementSeances.set(false);
+      },
+      error: (err) => {
+        console.error('Erreur de chargement des séances', err);
+        this.chargementSeances.set(false);
+      }
+    });
+  }
+
+  fermerReservation(): void {
+    this.filmSelectionne.set(null);
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    this.fermerReservation();
+  }
+
+  choisirSeance(seance: Seance): void {
+    console.log('Séance choisie', this.filmSelectionne()?.nom, seance);
+    // étape suivante : choix des sièges
+  }
+
+  // "14:15:00" -> "14:15"
+  heureFormatee(heure: string): string {
+    return heure ? heure.slice(0, 5) : '';
+  }
+
+  // "2026-11-24" -> "24/11/2026"
+  dateFormatee(date: string): string {
+    if (!date) return '';
+    const [annee, mois, jour] = date.split('-');
+    return `${jour}/${mois}/${annee}`;
+  }
+
   dureeFormatee(minutes?: number): string {
     if (!minutes) return '';
     const h = Math.floor(minutes / 60);
@@ -30,7 +81,6 @@ export class TableauFilmComponent implements OnInit {
     return `${h}h ${m}`;
   }
 
-  // ["SCIENCE_FICTION", "ACTION"] -> "Science fiction, Action"
   genresTexte(film: Film): string {
     return film.genres
       .map((g) => {
@@ -41,8 +91,9 @@ export class TableauFilmComponent implements OnInit {
   }
 
   afficheParDefaut(event: Event): void {
-  const img = event.target as HTMLImageElement;
-  img.onerror = null; 
-  img.src = 'affiches/defaut.jpg';
-}
+    const img = event.target as HTMLImageElement;
+    const defaut = '/affiches/defaut.jpg';
+    if (img.src.endsWith(defaut)) return;
+    img.src = defaut;
+  }
 }
