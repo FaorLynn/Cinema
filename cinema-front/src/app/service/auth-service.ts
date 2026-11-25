@@ -67,5 +67,13 @@ public get compteId(): number {
   } catch {
     return 0;
   }
+
+}
+  public isLoggedIn(): boolean {
+    return this._token !== '';
+  }
+
+  public hasRole(...roles: string[]): boolean {
+    return roles.includes(this.role);
 }
 }

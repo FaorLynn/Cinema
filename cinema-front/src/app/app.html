@@ -1,15 +1,6 @@
-
-<app-navbar></app-navbar>
-
-<nav aria-label="Gestion des comptes">
-  <strong>Cinéma</strong>
-  <a routerLink="/utilisateurs" routerLinkActive="active" ariaCurrentWhenActive="page"
-    >Utilisateurs</a
-  >
-  <a routerLink="/responsables" routerLinkActive="active" ariaCurrentWhenActive="page"
-    >Responsables</a
-  >
-</nav>
+@if (authService.isLoggedIn()) {
+  <app-navbar></app-navbar>
+}
 <main>
   <router-outlet />
 </main>
