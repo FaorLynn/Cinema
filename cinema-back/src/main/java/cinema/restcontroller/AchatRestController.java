@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 import cinema.dao.IDAOAchat;
 import cinema.dto.request.CreateAchatRequest;
 import cinema.dto.response.AchatResponse;
+import cinema.dto.response.ReservationDetail;
 import cinema.model.Achat;
 import jakarta.transaction.Transactional;
+
 
 
 @RestController 
@@ -75,4 +77,11 @@ public class AchatRestController {
 
         return AchatResponse.convert(achat);
 }
+
+
+    @GetMapping("/reservation/{userId}")
+    public List<ReservationDetail> getAllReservation(@PathVariable  Integer  userId) {
+        return dao.findReservationByUserId(userId);
+    }
+    
 }

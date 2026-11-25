@@ -54,6 +54,18 @@ export class AuthService {
   } catch {
     return '';
   }
+  
 }
+public get compteId(): number {
+  if (!this._token) return 0;
 
+  try {
+    const payload = this._token.split('.')[1];
+    const json = JSON.parse(atob(payload.replace(/-/g, '+').replace(/_/g, '/')));
+
+    return Number(json.compteId) || 0;
+  } catch {
+    return 0;
+  }
+}
 }

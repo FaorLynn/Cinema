@@ -1,0 +1,18 @@
+<div class="ticket">
+  <div class="info">
+    <p class="ref">{{ reservation().achatId }} · {{ reservation().seance_date }}</p>
+    <h3 class="film">{{ reservation().film_nom }}</h3>
+    <p class="details">
+      {{ reservation().cinema_ville }} · {{ reservation().cinemaNom }} ·
+      {{ reservation().seance_heure }} · {{ reservation().salleNom }}
+    </p>
+    <p class="details">
+      Sièges {{ reservation().placeId }} · {{ reservation().prixAchat }} €
+    </p>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="btn modifier">Modifier les sièges</button>
+    <button type="button" class="btn annuler">Annuler</button>
+  </div>
+</div>
