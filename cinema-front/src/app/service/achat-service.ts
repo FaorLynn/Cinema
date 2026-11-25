@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Achat } from '../model/achat';
 import { Observable } from 'rxjs';
+import { Reservation } from '../component/reservation/reservation';
+import {  ReservationModel } from '../model/reservationModel';
 
 @Injectable({
   providedIn: 'root',
@@ -23,6 +25,10 @@ export class AchatService {
 
   public remove(achat: Achat): Observable<void> {
     return this.http.delete<void>(`${ this.apiUrl }/${ achat.id }`);
+  }
+
+  public getReservations(idUser : number): Observable<ReservationModel[]>{
+    return this.http.get<ReservationModel[]>(`${ this.apiUrl }/reservation/${idUser}`);
   }
 
 

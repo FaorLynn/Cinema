@@ -1,1 +1,17 @@
-<p>reservations-page works!</p>
+<section id="reservations-view">
+ <div class="eyes">VOTRE PROCHAINE SORTIE</div>
+  <h1 class="page-title">Mes réservations</h1>
+
+  <p class="muted">
+    Vous avez {{ reservations().length }}
+    {{ reservations().length > 1 ? 'réservations' : 'réservation' }}.
+  </p>
+
+  @for (reservation of reservations(); track reservation.achatId) {
+    <app-reservation [reservation]="reservation" />
+  } @empty {
+    <div class="empty">
+      <p class="muted">Aucune réservation pour le moment.</p>
+    </div>
+  }
+</section>

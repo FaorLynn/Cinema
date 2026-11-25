@@ -27,6 +27,7 @@ import cinema.dto.request.SubscribeRequest;
 import cinema.dto.response.AuthResponse;
 import cinema.dto.response.SubscribeResponse;
 import cinema.model.Adresse;
+import cinema.model.Compte;
 import cinema.model.Utilisateur;
 
 
@@ -47,7 +48,7 @@ public class AuthRestController {
     @PostMapping("auth")
     public AuthResponse auth(@RequestBody AuthRequest request) {
         Authentication auth = new UsernamePasswordAuthenticationToken(request.login(), request.password());
-        
+        Compte compte = this.daoCompte.findByLogin(request.login()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         auth = this.authenticationManager.authenticate(auth);
         Instant now = Instant.now();
 
@@ -66,7 +67,7 @@ public class AuthRestController {
 
             // Liste des rôles / autorisations / etc.
             .claim("scope", scope)
-            
+            .claim("compteId", compte.getId())
             .build()
         ;
         // Header - En-tête du jeton JWT
