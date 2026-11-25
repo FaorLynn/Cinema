@@ -129,9 +129,13 @@ public class SeanceRestController {
 
 
     @GetMapping("/film/{filmId}")
-public List<SeanceResponse> findByFilm(@PathVariable Integer filmId) {
-    return daoSeance.findByFilmId(filmId).stream()
-        .map(SeanceResponse::convert)
-        .toList();
-}
+    public List<SeanceResponse> findByFilm(@PathVariable Integer filmId) {
+        return daoSeance.findByFilmId(filmId).stream()
+            .map(seance -> {
+                int reservations = daoDetAchat.countBySeanceId(seance.getId());
+                int disponibles = seance.getSalle().getCapacite_max() - reservations;
+                return SeanceResponse.convert(seance, disponibles);
+            })
+            .toList();
+    }
 }
