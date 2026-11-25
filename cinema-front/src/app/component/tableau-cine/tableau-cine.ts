@@ -7,7 +7,8 @@ import { CinemaService } from '../../service/cinema-service';
   selector: 'app-tableau-cine',
   standalone: true,
   imports: [FormsModule],
-  templateUrl: './tableau-cine.html'
+  templateUrl: './tableau-cine.html',
+  styleUrls: ['./tableau-cine.css']
 })
 export class TableauCineComponent implements OnInit {
   cinemas: Cinema[] = [];

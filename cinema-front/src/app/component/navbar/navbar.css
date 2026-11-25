@@ -1,21 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap');
 
-:root {
+/* Variables et fond : sur :host, pas sur :root / body */
+:host {
   --yellow: #ffce32;
   --bg: #111212;
-  --panel: #1c1d1d;
   --muted: #a9aaa5;
   --line: #353633;
+
+  display: block;
+  background: var(--bg);
+  font-family: 'DM Sans', Arial, sans-serif;
 }
 
 * { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  background: var(--bg);
-  color: #f7f5ee;
-  font-family: 'DM Sans', Arial, sans-serif;
-}
 
 button, a, select { -webkit-tap-highlight-color: transparent; }
 button, select { font: inherit; }
@@ -43,7 +40,7 @@ header {
 .brand {
   font-family: 'Barlow Condensed', Impact, sans-serif;
   font-size: 25px;
-  color: white;
+  color: #fff;                 /* était #101010 */
   text-decoration: none;
   line-height: 1;
   position: relative;
@@ -55,6 +52,7 @@ header {
   font: 8px 'DM Sans', sans-serif;
   letter-spacing: 1.3px;
   margin-top: 9px;
+  color: #fff;                 /* slogan blanc */
 }
 
 .duck {
@@ -93,7 +91,11 @@ nav button {
   text-decoration: none;
   font-family: inherit;
   cursor: pointer;
+  transition: color 0.2s;
 }
+
+nav a:hover,
+nav button:hover { color: #fff; }
 
 nav a.active { color: var(--yellow); }
 
@@ -108,6 +110,7 @@ nav a.active { color: var(--yellow); }
   font-size: 9px;
   letter-spacing: 2px;
   color: var(--muted);
+  text-transform: uppercase;
 }
 
 /* ---------- RESPONSIVE ---------- */

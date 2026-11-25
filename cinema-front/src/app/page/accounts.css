@@ -2,6 +2,7 @@ section {
   max-width: 1100px;
   margin: 0 auto;
   padding: 1.5rem;
+  color: #fff;
 }
 
 header,
@@ -16,17 +17,34 @@ header {
   justify-content: space-between;
 }
 
+h1,
+h2 {
+  color: var(--yellow, #ffce32);
+}
+
 h1 {
   margin-bottom: 0.25rem;
 }
 .subtitle {
   margin-top: 0;
-  color: #555;
+  color: var(--muted, #a9aaa5);
 }
 
 button {
   cursor: pointer;
   padding: 0.55rem 0.85rem;
+  background: transparent;
+  color: var(--yellow, #ffce32);
+  border: 1px solid var(--line, #353633);
+  border-radius: 4px;
+  font: inherit;
+  transition: 0.2s;
+}
+
+button:hover:not(:disabled) {
+  background: var(--yellow, #ffce32);
+  border-color: var(--yellow, #ffce32);
+  color: #111212;
 }
 
 button:disabled {
@@ -35,7 +53,7 @@ button:disabled {
 }
 
 form {
-  border: 1px solid #ccc;
+  border: 1px solid var(--line, #353633);
   border-radius: 6px;
   padding: 1rem;
   margin: 1rem 0;
@@ -51,18 +69,32 @@ form {
 label {
   display: grid;
   gap: 0.35rem;
+  color: #fff;
 }
 input {
   min-width: 0;
   padding: 0.55rem;
+  background: var(--panel, #1c1d1d);
+  color: #fff;
+  border: 1px solid var(--line, #353633);
+  border-radius: 6px;
+}
+input:focus {
+  outline: none;
+  border-color: #fff;
 }
 small {
-  color: #555;
+  color: var(--muted, #a9aaa5);
 }
 fieldset {
   margin: 1rem 0;
-  border: 1px solid #ccc;
+  border: 1px solid var(--line, #353633);
 }
+legend {
+  color: var(--yellow, #ffce32);
+}
+
+/* ===== Tableau ===== */
 .table-container {
   overflow-x: auto;
   margin-top: 1rem;
@@ -76,10 +108,17 @@ caption {
   text-align: left;
   margin-bottom: 0.5rem;
   font-weight: bold;
+  color: var(--yellow, #ffce32);
+}
+th {
+  color: var(--yellow, #ffce32);
+}
+td {
+  color: #fff;
 }
 th,
 td {
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid var(--line, #353633);
   padding: 0.75rem;
 }
 .error {
