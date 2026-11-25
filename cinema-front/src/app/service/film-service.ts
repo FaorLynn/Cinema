@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Film } from '../model/film';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class FilmService {
     private http: HttpClient = inject(HttpClient);
     private apiUrl = "/api/film";
@@ -25,5 +25,9 @@ export class FilmService {
 
     public remove(film: Film): Observable<void> {
         return this.http.delete<void>(`${this.apiUrl}/${film.id}`);
+    }
+
+    public findDernierFilm(): Observable<Film | null> {
+        return this.http.get<Film | null>(`${this.apiUrl}/dernier-film`);
     }
 }

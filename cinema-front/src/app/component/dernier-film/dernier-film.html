@@ -1,0 +1,26 @@
+@if (chargement()) {
+  <p>Chargement du dernier film...</p>
+} @else if (film(); as f) {
+  <section>
+    <h2>Dernière sortie</h2>
+
+    <article class="film-carte">
+
+      <div class="affiche-container">
+        <img
+          [src]="'affiches/' + f.id + '.jpg'"
+          [alt]="'Affiche de ' + f.nom"
+        />
+
+        <div class="texte-affiche">
+          <h3>{{ f.nom }}</h3>
+          <p>– Pas de couac, un film</p>
+        </div>
+      </div>
+
+
+    </article>
+  </section>
+} @else {
+  <p>Aucun film actuellement disponible.</p>
+}

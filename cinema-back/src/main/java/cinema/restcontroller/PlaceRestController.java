@@ -45,7 +45,7 @@ public class PlaceRestController {
     public PlaceResponse findById(@PathVariable Integer id) {
         return PlaceResponse.convert(this.dao.findById(id)
             .orElseThrow(() -> new RuntimeException("Place introuvable : " + id)));
-}
+    }
 
     @DeleteMapping("/{id}")
 	public void supprimer(@PathVariable Integer id)
@@ -63,7 +63,7 @@ public class PlaceRestController {
 
         place = this.dao.save(place);
 
-    return PlaceResponse.convert(place);
+        return PlaceResponse.convert(place);
     }
 
     @PutMapping("/{id}")
@@ -78,6 +78,6 @@ public class PlaceRestController {
         place = this.dao.save(place);
 
         return PlaceResponse.convert(place);
-}
+    }
 
 }

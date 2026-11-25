@@ -29,8 +29,6 @@ export class CinemaPage implements OnInit{
   protected formCinemaVoieCtrl!: FormControl;
   protected formCinemaVilleCtrl!: FormControl;
   protected formCinemaCpCtrl!: FormControl;
-  //liste des salles?
-  // protected formCinemaSalleCtrl!: FormControl;
   //responsable
   protected formCinemaResponsableCtrl!: FormControl;
 
@@ -38,7 +36,6 @@ export class CinemaPage implements OnInit{
     private title: Title,
     private cinemaService: CinemaService,
     private responsableService: ResponsableService,
-    // private salleService: SalleService,
     private formBuilder: FormBuilder
   ) { }
 
@@ -54,7 +51,6 @@ export class CinemaPage implements OnInit{
     this.formCinemaVilleCtrl = this.formBuilder.control("", Validators.required);
     this.formCinemaCpCtrl = this.formBuilder.control("", Validators.required);
 
-    // this.formCinemaSalleCtrl = this.formBuilder.control("");
     this.formCinemaResponsableCtrl = this.formBuilder.control("", Validators.required);
     
     this.formCinemaGrp = this.formBuilder.group({
@@ -65,7 +61,6 @@ export class CinemaPage implements OnInit{
         ville: this.formCinemaVilleCtrl,
         cp: this.formCinemaCpCtrl
       }),
-      // salles: this.formCinemaSalleCtrl,
       responsableId: this.formCinemaResponsableCtrl
     });
     
