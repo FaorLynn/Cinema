@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import cinema.dao.IDAODetailAchat;
 import cinema.dao.IDAOFilm;
 import cinema.dao.IDAOSalle;
 import cinema.dao.IDAOSeance;
@@ -29,17 +30,22 @@ public class SeanceRestController {
     private final IDAOSeance daoSeance;
     private final IDAOSalle daoSalle;
     private final IDAOFilm daoFilm;
+    private final IDAODetailAchat daoDetAchat;
 
-    public SeanceRestController(IDAOSeance dao, IDAOSalle daoSalle, IDAOFilm daoFilm) {
+    public SeanceRestController(IDAOSeance dao, IDAOSalle daoSalle, IDAOFilm daoFilm, IDAODetailAchat daoDetAchat) {
         this.daoSeance = dao;
         this.daoSalle = daoSalle;
         this.daoFilm = daoFilm;
+        this.daoDetAchat = daoDetAchat;
     }
 
     @GetMapping
     public List<SeanceResponse> findAll() {
         return daoSeance.findAll().stream()
-            .map(SeanceResponse::convert)
+            .map(seance -> SeanceResponse.convert(
+                seance,
+                seance.getSalle().getCapacite_max() - daoDetAchat.countBySeanceId(seance.getId())
+            ))
             .toList();
     }
 
@@ -49,7 +55,10 @@ public class SeanceRestController {
             .orElseThrow(() -> new ResponseStatusException(
                 HttpStatus.NOT_FOUND, "Séance introuvable : " + id));
 
-        return SeanceResponse.convert(seance);
+        int reservations = daoDetAchat.countBySeanceId(id);
+        int disponibles = seance.getSalle().getCapacite_max() - reservations;
+
+        return SeanceResponse.convert(seance, disponibles);
     }
 
     @PostMapping
@@ -67,12 +76,16 @@ public class SeanceRestController {
         seance.setSalle(salle);
         seance.setFilm(film);
 
-        return SeanceResponse.convert(daoSeance.save(seance));
+        Seance seanceSauvee = daoSeance.save(seance);
+
+        int reservations = daoDetAchat.countBySeanceId(seanceSauvee.getId());
+        int disponibles = seanceSauvee.getSalle().getCapacite_max() - reservations;
+
+        return SeanceResponse.convert(seanceSauvee, disponibles);
     }
 
     @PutMapping("/{id}")
-    public SeanceResponse update(@PathVariable Integer id,
-            @RequestBody CreateSeanceRequest request) {
+    public SeanceResponse update(@PathVariable Integer id, @RequestBody CreateSeanceRequest request) {
         Seance seance = daoSeance.findById(id)
             .orElseThrow(() -> new ResponseStatusException(
                 HttpStatus.NOT_FOUND, "Séance introuvable : " + id));
@@ -88,13 +101,32 @@ public class SeanceRestController {
         seance.setSalle(salle);
         seance.setFilm(film);
 
-        return SeanceResponse.convert(daoSeance.save(seance));
+        Seance seanceSauvee = daoSeance.save(seance);
+
+        int reservations = daoDetAchat.countBySeanceId(seanceSauvee.getId());
+        int disponibles = seanceSauvee.getSalle().getCapacite_max() - reservations;
+
+        return SeanceResponse.convert(seanceSauvee, disponibles);
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Integer id) {
         daoSeance.deleteById(id);
     }
+
+    @GetMapping("/{id}/disponibilite")
+    public SeanceResponse disponibilite(@PathVariable Integer id) {
+
+        Seance seance = daoSeance.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "Séance introuvable : " + id));
+
+        int reservations = daoDetAchat.countBySeanceId(id);
+
+        int disponibles = seance.getSalle().getCapacite_max() - reservations;
+        return SeanceResponse.convert(seance, disponibles);
+    }
+
 
     @GetMapping("/film/{filmId}")
 public List<SeanceResponse> findByFilm(@PathVariable Integer filmId) {
