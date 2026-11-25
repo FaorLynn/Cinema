@@ -1,37 +1,44 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, Service } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Seance } from '../model/seance';
-import { Salle } from '../model/salle';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SeanceService {
-    private apiUrl:string="/api/place";
-    private apiUrlSalle:string="/api/salle/place";
-    private http: HttpClient = inject(HttpClient);
-    
-    public findAll(): Observable<Seance[]> {
-        console.log("service find all ")
+  private http: HttpClient = inject(HttpClient);
+  private apiUrl = '/api/seance';
+
+  public findAll(): Observable<Seance[]> {
     return this.http.get<Seance[]>(this.apiUrl);
-    }
+  }
 
+  public findById(id: number): Observable<Seance> {
+    return this.http.get<Seance>(`${this.apiUrl}/${id}`);
+  }
 
-    public findSalle(seance: Seance):Observable<Salle[]>{
-      return this.http.get<Salle[]>(`${ this.apiUrlSalle }/${ seance.id }`);
-    }
+  // Séances d'un film (nécessite l'endpoint ajouté à l'étape 3)
+  public findByFilm(filmId: number): Observable<Seance[]> {
+    return this.http.get<Seance[]>(`${this.apiUrl}/film/${filmId}`);
+  }
 
-    public save(seance: Seance): Observable<Seance> {
+  public save(seance: Seance): Observable<Seance> {
+    // Correspond à CreateSeanceRequest côté back : date, heure, salleId, filmId
+    const body = {
+      date: seance.date,
+      heure: seance.heure,
+      salleId: seance.salleId,
+      filmId: seance.filmId,
+    };
+
     if (!seance.id) {
-      return this.http.post<Seance>(this.apiUrl, seance);
+      return this.http.post<Seance>(this.apiUrl, body);
     }
+    return this.http.put<Seance>(`${this.apiUrl}/${seance.id}`, body);
+  }
 
-        return this.http.put<Seance>(`${ this.apiUrl }/${ seance.id }`, seance);
-    }
-
-    public remove(seance: Seance): Observable<void> {
-        return this.http.delete<void>(`${ this.apiUrl }/${ seance.id }`);
-    }
-
+  public remove(seance: Seance): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${seance.id}`);
+  }
 }
