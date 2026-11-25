@@ -11,7 +11,7 @@ export interface ReservationModel {
     filmNom:string;
     seanceDate:string;
     seanceHeure:string;
-    cinema_ville:string;
+    cinemaVille:string;
 
 
 

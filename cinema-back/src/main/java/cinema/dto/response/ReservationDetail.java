@@ -13,10 +13,10 @@ public interface ReservationDetail {
     String getSalleNom();
     Integer getCinemaId();
     String getCinemaNom();
-    String getFilm_nom();
-    LocalDate getSeance_date();
-    LocalTime  getSeance_heure();
-    String getCinema_ville();
+    String getFilmNom();
+    LocalDate getSeanceDate();
+    LocalTime  getSeanceHeure();
+    String getCinemaVille();
     
             
 
