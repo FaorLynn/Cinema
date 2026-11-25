@@ -1,1 +1,18 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  --yellow: #ffce32;
+  --bg: #111212;
+  --panel: #1c1d1d;
+  --muted: #a9aaa5;
+  --line: #353633;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: #fff;
+  font-family: 'DM Sans', Arial, sans-serif;
+}
