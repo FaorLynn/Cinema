@@ -1,0 +1,73 @@
+:host {
+  --yellow: #ffce32;
+  --bg: #111212;
+  --muted: #a9aaa5;
+  --line: #353633;
+
+  display: block;
+  background: var(--bg);
+  font-family: 'DM Sans', Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+button { font: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+
+button:focus-visible {
+  outline: 3px solid var(--yellow);
+  outline-offset: 5px;
+}
+
+.barre {
+  max-width: 1440px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 0 5%;
+  border-bottom: 1px solid var(--line);
+}
+
+.onglets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 26px;
+}
+
+.onglets button {
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: var(--muted);
+  font-size: 13px;
+  padding: 16px 0 12px;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.onglets button:hover { color: #fff; }
+
+.onglets button.active {
+  color: var(--yellow);
+  border-bottom-color: var(--yellow);
+}
+
+.droite {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 800px) {
+  .barre { flex-wrap: wrap; }
+  .onglets { gap: 17px; }
+}
+
+@media (max-width: 520px) {
+  .barre { padding: 0 6%; }
+  .onglets { width: 100%; justify-content: space-between; gap: 8px; }
+  .onglets button { font-size: 11px; }
+}

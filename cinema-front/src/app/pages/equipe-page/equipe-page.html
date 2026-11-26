@@ -1,15 +1,43 @@
-<p>equipe-page works!</p>
+<section class="equipe">
 
-@if (authService.hasRole('ADMIN', 'RESPONSABLE')) {
-<nav aria-label="Gestion des comptes">
-  <strong>Cinéma</strong>
-  <a routerLink="/utilisateurs" routerLinkActive="active" ariaCurrentWhenActive="page"
-    >Utilisateurs</a
-  >
-  <a routerLink="/responsables" routerLinkActive="active" ariaCurrentWhenActive="page"
-    >Responsables</a
-  >
-</nav>
+  <app-gestion-equipe [(actif)]="onglet">
+    @if (isAdmin) {
+      <label for="cinema">Cinéma</label>
+      <select id="cinema" (change)="onCinemaChange($event)">
+        @for (c of cinemas(); track c.id) {
+          <option [value]="c.id" [selected]="c.id === cinemaId()">{{ c.nom }}</option>
+        }
+      </select>
+    }
+  </app-gestion-equipe>
 
-<app-prog-seance></app-prog-seance>
-}
+  <div class="equipe-contenu">
+    @switch (onglet()) {
+      @case ('utilisateurs') {
+        <app-utilisateur-page />
+      }
+      @case ('films') {
+        <app-gestion-film />
+      }
+      @case ('seances') {
+        @if (!isAdmin || cinemaId() !== null) {
+          <app-prog-seance />
+        }
+      }
+      @case ('billetterie') {
+        <app-place-page />
+      }
+      @case ('cinema') {
+        @if (isAdmin) {
+          <app-cinema-gestion />
+        }
+      }
+      @case ('responsable') {
+        @if (isAdmin) {
+          <app-responsable-page />
+        }
+      }
+    }
+  </div>
+
+</section>
