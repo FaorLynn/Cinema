@@ -1,5 +1,6 @@
 package cinema.restcontroller;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -15,13 +16,18 @@ import org.springframework.web.server.ResponseStatusException;
 
 import cinema.dao.IDAODetailAchat;
 import cinema.dao.IDAOFilm;
+import cinema.dao.IDAOResponsable;
 import cinema.dao.IDAOSalle;
 import cinema.dao.IDAOSeance;
 import cinema.dto.request.CreateSeanceRequest;
+import cinema.dto.response.ProgSeanceResponse;
 import cinema.dto.response.SeanceResponse;
+import cinema.model.Cinema;
 import cinema.model.Film;
+import cinema.model.Responsable;
 import cinema.model.Salle;
 import cinema.model.Seance;
+import jakarta.transaction.Transactional;
 
 @RestController
 @RequestMapping("api/seance")
@@ -31,13 +37,16 @@ public class SeanceRestController {
     private final IDAOSalle daoSalle;
     private final IDAOFilm daoFilm;
     private final IDAODetailAchat daoDetAchat;
+    private final IDAOResponsable daoResponsable;
 
-    public SeanceRestController(IDAOSeance dao, IDAOSalle daoSalle, IDAOFilm daoFilm, IDAODetailAchat daoDetAchat) {
-        this.daoSeance = dao;
-        this.daoSalle = daoSalle;
-        this.daoFilm = daoFilm;
-        this.daoDetAchat = daoDetAchat;
-    }
+    public SeanceRestController(IDAOSeance dao, IDAOSalle daoSalle, IDAOFilm daoFilm,
+            IDAODetailAchat daoDetAchat, IDAOResponsable daoResponsable) {
+    this.daoSeance = dao;
+    this.daoSalle = daoSalle;
+    this.daoFilm = daoFilm;
+    this.daoDetAchat = daoDetAchat;
+    this.daoResponsable = daoResponsable;
+}
 
     @GetMapping
     public List<SeanceResponse> findAll() {
@@ -135,6 +144,37 @@ public class SeanceRestController {
                 int reservations = daoDetAchat.countBySeanceId(seance.getId());
                 int disponibles = seance.getSalle().getCapacite_max() - reservations;
                 return SeanceResponse.convert(seance, disponibles);
+            })
+            .toList();
+    }
+
+    @GetMapping("/programmation")
+    @Transactional
+    public List<ProgSeanceResponse> programmation(Principal principal) {
+        if (principal == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
+
+        Responsable responsable = daoResponsable.findByLogin(principal.getName())
+            .orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.FORBIDDEN, "Ce compte n'est pas un responsable"));
+
+        Cinema cinema = responsable.getCinema();
+        if (cinema == null) {
+            throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "Aucun cinéma lié à ce responsable");
+        }
+
+        return daoSeance.findByCinemaId(cinema.getId()).stream()
+            .map(s -> {
+                int capacite = s.getSalle().getCapacite_max();
+                int disponibles = capacite - daoDetAchat.countBySeanceId(s.getId());
+                return new ProgSeanceResponse(
+                    s.getId(), s.getDate(), s.getHeure(),
+                    s.getFilm().getNom(),
+                    s.getSalle().getNom(),
+                    s.getSalle().getType() != null ? s.getSalle().getType().name() : null,
+                    capacite, disponibles, disponibles <= 0);
             })
             .toList();
     }

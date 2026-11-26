@@ -1,0 +1,44 @@
+<section class="prog">
+  <h2>Programmation du cinéma</h2>
+
+  @if (chargement()) {
+    <p>Chargement…</p>
+  } @else if (erreur()) {
+    <p class="erreur" role="alert">{{ erreur() }}</p>
+  } @else {
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Film</th>
+            <th scope="col">Date</th>
+            <th scope="col">Heure</th>
+            <th scope="col">Salle</th>
+            <th scope="col">Type</th>
+            <th scope="col">Places</th>
+            <th scope="col">Statut</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (s of seances(); track s.id) {
+            <tr>
+              <td>{{ s.filmNom }}</td>
+              <td>{{ dateFormatee(s.date) }}</td>
+              <td>{{ heureFormatee(s.heure) }}</td>
+              <td>{{ s.salleNom }}</td>
+              <td>{{ typeLibelle(s.typeSalle) }}</td>
+              <td>{{ s.placesDisponibles }} / {{ s.capacite }}</td>
+              <td>
+                <span class="badge" [class.complete]="s.complete">
+                  {{ s.complete ? 'Complète' : 'Places disponibles' }}
+                </span>
+              </td>
+            </tr>
+          } @empty {
+            <tr><td colspan="7">Aucune séance programmée.</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>

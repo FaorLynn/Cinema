@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Seance } from '../model/seance';
+import { ProgSeance } from '../model/prog';
 
 @Injectable({
   providedIn: 'root',
@@ -41,4 +42,8 @@ export class SeanceService {
   public remove(seance: Seance): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${seance.id}`);
   }
+
+  public findProgrammation(): Observable<ProgSeance[]> {
+  return this.http.get<ProgSeance[]>(`${this.apiUrl}/programmation`);
+}
 }
