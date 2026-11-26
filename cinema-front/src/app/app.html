@@ -4,3 +4,6 @@
 <main>
   <router-outlet />
 </main>
+@if (authService.isLoggedIn()) {
+  <app-footer></app-footer>
+}

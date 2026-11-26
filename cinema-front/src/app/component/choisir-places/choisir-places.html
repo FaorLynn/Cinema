@@ -1,0 +1,71 @@
+<section aria-labelledby="titre-sieges">
+  <h3 id="titre-sieges">{{ lectureSeule ? 'Plan de la salle' : 'Choisissez vos sièges' }}</h3>
+  <p>{{ seance().date }} · {{ seance().heure.slice(0, 5) }} · {{ seance().salle?.nom }}</p>
+
+  @if (lectureSeule) {
+    <p>Vue administrateur : consultation uniquement, sans réservation.</p>
+  }
+
+  @if (chargement()) {
+    <p role="status">Chargement des disponibilités…</p>
+  } @else if (erreur()) {
+    <p role="alert">{{ erreur() }}</p>
+    <button type="button" (click)="charger()">Réessayer</button>
+  } @else if (places().length === 0) {
+    <p>Aucune place configurée pour cette salle.</p>
+  } @else {
+    <div class="legende">
+      <span>□ Libre</span><span>▧ Occupé</span><span class="accent">■ Sélectionné</span>
+    </div>
+    <div class="plan" aria-label="Plan des sièges">
+      <div class="ecran">ÉCRAN</div>
+      @for (rangee of rangees(); track rangee) {
+        <div class="rangee">
+          <span class="numero-rangee">R{{ rangee }}</span>
+          @for (place of placesDeRangee(rangee); track place.id) {
+            <button
+              type="button"
+              class="siege"
+              [class.occupe]="estOccupee(place)"
+              [class.selectionne]="estSelectionnee(place)"
+              [disabled]="lectureSeule || estOccupee(place)"
+              [attr.aria-pressed]="estSelectionnee(place)"
+              [attr.aria-label]="
+                'Rangée ' +
+                place.range +
+                ', siège ' +
+                place.col +
+                (estOccupee(place) ? ', occupé' : ', libre')
+              "
+              [style.grid-column]="place.col - placesDeRangee(rangee)[0].col + 2"
+              (click)="choisir(place)"
+            >
+              {{ place.col }}
+            </button>
+          }
+        </div>
+      }
+    </div>
+    @if (!lectureSeule) {
+      <p aria-live="polite">{{ selection().length }} siège(s) sélectionné(s)</p>
+      @for (place of selection(); track place.id) {
+        <span class="choix">Rangée {{ place.range }} · siège {{ place.col }}</span>
+      }
+      <p class="precision">Les places seront confirmées lors de la validation de la réservation.</p>
+    }
+  }
+
+  <div class="actions">
+    <button type="button" (click)="retour.emit()">← Changer de séance</button>
+    @if (!lectureSeule) {
+      <button
+        type="button"
+        class="principal"
+        [disabled]="chargement() || !!erreur() || selection().length === 0"
+        (click)="valider()"
+      >
+        Continuer →
+      </button>
+    }
+  </div>
+</section>
