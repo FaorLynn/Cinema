@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Tête du canard -->
+  <path
+    d="M8 12 Q8 4 20 4 H42 Q56 4 56 17 V42 Q56 58 40 58 H20 Q8 58 8 44 Z"
+    fill="#ffce32"
+  />
+
+  <!-- Symbole du logo original -->
+  <text
+    x="10"
+    y="48"
+    font-family="Arial, sans-serif"
+    font-size="49"
+    fill="#161710">◕</text>
+
+  <!-- Bec orange -->
+  <path
+    d="M47 32 Q55 28 62 34 Q64 39 58 41 L48 41 Z"
+    fill="#ec942a"
+  />
+</svg>
