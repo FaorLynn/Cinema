@@ -1,0 +1,21 @@
+<div class="barre">
+  <nav class="onglets" aria-label="Gestion de l'équipe">
+    @for (o of onglets; track o.id) {
+      @if (!o.adminSeulement || isAdmin) {
+        <button
+          type="button"
+          [class.active]="actif() === o.id"
+          [attr.aria-current]="actif() === o.id ? 'true' : null"
+          (click)="actif.set(o.id)"
+        >
+          {{ o.libelle }}
+        </button>
+      }
+    }
+  </nav>
+
+  <!-- emplacement à droite : le parent y met le select de cinéma (ADMIN) -->
+  <div class="droite">
+    <ng-content />
+  </div>
+</div>
