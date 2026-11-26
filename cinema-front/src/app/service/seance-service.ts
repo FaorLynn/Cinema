@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Seance } from '../model/seance';
 import { ProgSeance } from '../model/prog';
+import { SalleOption } from '../model/salle-option';
 
 @Injectable({
   providedIn: 'root',
@@ -45,5 +46,21 @@ export class SeanceService {
 
   public findProgrammation(): Observable<ProgSeance[]> {
   return this.http.get<ProgSeance[]>(`${this.apiUrl}/programmation`);
+}
+
+public findSallesCinema(): Observable<SalleOption[]> {
+  return this.http.get<SalleOption[]>(`${this.apiUrl}/programmation/salles`);
+}
+
+public creerSeance(body: { date: string; heure: string; salleId: number; filmId: number }): Observable<ProgSeance> {
+  return this.http.post<ProgSeance>(`${this.apiUrl}/programmation`, body);
+}
+
+public modifierSeance(id: number, body: { date: string; heure: string; salleId: number; filmId: number }): Observable<ProgSeance> {
+  return this.http.put<ProgSeance>(`${this.apiUrl}/programmation/${id}`, body);
+}
+
+public supprimerSeance(id: number): Observable<void> {
+  return this.http.delete<void>(`${this.apiUrl}/programmation/${id}`);
 }
 }
