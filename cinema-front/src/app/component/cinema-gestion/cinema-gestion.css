@@ -1,0 +1,13 @@
+p {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 40px 28px;
+  background: #1b1d1c;
+  border: 1px solid #2c2e2d;
+  border-radius: 8px;
+  color: #fff;
+  font-family: 'DM Sans', Arial, Helvetica, sans-serif;
+  box-sizing: border-box;
+}
