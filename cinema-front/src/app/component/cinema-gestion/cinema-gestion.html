@@ -1,0 +1,139 @@
+
+<h1>Gestion des cinémas</h1>
+
+
+<!-- FORMULAIRE -->
+
+<section>
+  <h2>
+    {{ editingCinemaId ? 'Modifier un cinéma' : 'Ajouter un cinéma' }}
+  </h2>
+
+  <form [formGroup]="formCinemaGrp"
+        (ngSubmit)="ajouterOuModifier()">
+
+    <div>
+      <label for="nom">Nom du cinéma</label>
+      <input
+        id="nom"
+        type="text"
+        formControlName="nom"
+        placeholder="Nom du cinéma">
+    </div>
+
+    <fieldset formGroupName="adresse">
+      <legend>Adresse</legend>
+
+      <div>
+        <label for="numero">Numéro</label>
+        <input
+          id="numero"
+          type="text"
+          formControlName="numero">
+      </div>
+
+      <div>
+        <label for="voie">Voie</label>
+        <input
+          id="voie"
+          type="text"
+          formControlName="voie">
+      </div>
+
+      <div>
+        <label for="ville">Ville</label>
+        <input
+          id="ville"
+          type="text"
+          formControlName="ville">
+      </div>
+
+      <div>
+        <label for="cp">Code postal</label>
+        <input
+          id="cp"
+          type="text"
+          formControlName="cp">
+      </div>
+    </fieldset>
+
+     <fieldset formGroupName="responsable">
+      <legend>Responsable</legend>
+
+      <div>
+        <label for="login">Login</label>
+        <input
+          id="Login"
+          type="text"
+          formControlName="Login">
+      </div>
+
+      <div>
+        <label for="password">password</label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password">
+      </div>
+
+      
+    </fieldset>
+
+    
+
+    <button type="submit" [disabled]="formCinemaGrp.invalid">
+      {{ editingCinemaId ? 'Enregistrer les modifications' : 'Ajouter le cinéma' }}
+    </button>
+
+    <button
+      type="button"
+      *ngIf="editingCinemaId"
+      (click)="annulerEdition()">
+      Annuler
+    </button>
+
+  </form>
+</section>
+
+
+
+
+
+<!-- LISTE DES CINEMAS -->
+<section>
+  <h2>Liste des cinémas</h2>
+
+  <div *ngIf="cinema$ | async as cinemas">
+
+    <p *ngIf="cinemas.length === 0">
+      Aucun cinéma enregistré.
+    </p>
+
+    <article *ngFor="let cinema of cinemas">
+
+      <h3>{{ cinema.nom }}</h3>
+
+      <p>
+        Adresse :
+        {{ cinema.adresse?.numero }}
+        {{ cinema.adresse?.voie }},
+        {{ cinema.adresse?.cp }}
+        {{ cinema.adresse?.ville }}
+      </p>
+
+      <p>
+        Identifiant du responsable : {{ cinema.responsableId }}
+      </p>
+
+      <button type="button" (click)="editer(cinema)">
+        Modifier
+      </button>
+
+      <button type="button" (click)="supprimer(cinema)">
+        Supprimer
+      </button>
+
+    </article>
+
+  </div>
+</section>
