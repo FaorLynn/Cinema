@@ -1,0 +1,81 @@
+h3 {
+  margin: 0 0 12px;
+}
+button {
+  font: inherit;
+  cursor: pointer;
+  border: 1px solid #777;
+  border-radius: 6px;
+  padding: 10px 14px;
+  background: #242420;
+  color: #fff;
+}
+button:focus-visible {
+  outline: 3px solid #ffc928;
+  outline-offset: 3px;
+}
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+.legende,
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 20px 0;
+}
+.plan {
+  overflow-x: auto;
+  padding: 8px 4px 20px;
+}
+.ecran {
+  border-top: 4px solid #bbb;
+  padding: 12px;
+  text-align: center;
+  letter-spacing: 0.25em;
+  margin-bottom: 24px;
+}
+.rangee {
+  display: grid;
+  grid-auto-columns: 42px;
+  grid-auto-flow: column;
+  gap: 8px;
+  margin-bottom: 10px;
+  width: max-content;
+}
+.numero-rangee {
+  grid-column: 1;
+  align-self: center;
+  color: #bbb;
+}
+.siege {
+  padding: 8px 2px;
+  min-height: 40px;
+}
+.siege.occupe {
+  background: repeating-linear-gradient(45deg, #555, #555 4px, #333 4px, #333 8px);
+}
+.siege.selectionne,
+.principal {
+  background: #ffc928;
+  color: #121212;
+  border-color: #ffc928;
+}
+.accent {
+  color: #ffc928;
+}
+.choix {
+  display: inline-block;
+  margin: 4px 8px 4px 0;
+  padding: 6px 10px;
+  border: 1px solid #ffc928;
+  border-radius: 6px;
+}
+.precision {
+  color: #bbb;
+  font-size: 0.85rem;
+}
+.actions {
+  justify-content: space-between;
+}

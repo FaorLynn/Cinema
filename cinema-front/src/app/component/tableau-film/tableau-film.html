@@ -12,7 +12,9 @@
         <h3>{{ f.nom }}</h3>
         <p class="infos">
           {{ genresTexte(f) }}
-          @if (f.dureeMinutes) { · {{ dureeFormatee(f.dureeMinutes) }} }
+          @if (f.dureeMinutes) {
+            · {{ dureeFormatee(f.dureeMinutes) }}
+          }
         </p>
 
         <button type="button" class="btn-reserver" (click)="ouvrirReservation(f)">
@@ -26,38 +28,61 @@
 <!-- PARTIE 2 : le pop-up (n'existe que si un film est sélectionné) -->
 @if (filmSelectionne(); as film) {
   <div class="overlay" (click)="fermerReservation()">
-    <div class="modal" (click)="$event.stopPropagation()">
-      <button type="button" class="fermer" (click)="fermerReservation()" aria-label="Fermer">✕</button>
+    <div
+      class="modal"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Réservation"
+      (click)="$event.stopPropagation()"
+    >
+      <button type="button" class="fermer" (click)="fermerReservation()" aria-label="Fermer">
+        ✕
+      </button>
 
       <p class="modal-lieu">Séances</p>
       <h2 class="modal-titre">{{ film.nom }}</h2>
 
       <ol class="etapes">
-        <li class="actif">01 · La séance</li>
-        <li>02 · Vos sièges</li>
+        <li [class.actif]="!seanceSelectionnee()">01 · La séance</li>
+        <li [class.actif]="!!seanceSelectionnee()">02 · Vos sièges</li>
         <li>03 · Confirmation</li>
       </ol>
 
-      <p class="modal-intro">Choisissez votre horaire.</p>
-
-      @if (chargementSeances()) {
-        <p class="modal-intro">Chargement des séances…</p>
-      } @else if (seances().length === 0) {
-        <p class="modal-intro">Aucune séance disponible pour ce film.</p>
+      @if (seanceSelectionnee(); as seance) {
+        <app-choisir-places
+          [seance]="seance"
+          (retour)="retourAuxSeances()"
+          (selectionModifiee)="placesSelectionnees.set([])"
+          (continuer)="preparerConfirmation($event)"
+        />
+        @if (placesSelectionnees().length > 0) {
+          <p role="status">
+            Sélection préparée : {{ placesSelectionnees().length }} siège(s). La confirmation
+            d’achat sera raccordée à l’étape suivante. Aucun achat enregistré.
+          </p>
+        }
       } @else {
-        <ul class="seances">
-          @for (s of seances(); track s.id) {
-            <li>
-              <button type="button" class="seance" (click)="choisirSeance(s)">
-                <span class="seance-gauche">
-                  <strong>{{ heureFormatee(s.heure) }}</strong>
-                  <small>{{ dateFormatee(s.date) }} · {{ s.salle?.nom }}</small>
-                </span>
-                <span class="seance-action">Choisir cette séance →</span>
-              </button>
-            </li>
-          }
-        </ul>
+        <p class="modal-intro">Choisissez votre horaire.</p>
+
+        @if (chargementSeances()) {
+          <p class="modal-intro">Chargement des séances…</p>
+        } @else if (seances().length === 0) {
+          <p class="modal-intro">Aucune séance disponible pour ce film.</p>
+        } @else {
+          <ul class="seances">
+            @for (s of seances(); track s.id) {
+              <li>
+                <button type="button" class="seance" (click)="choisirSeance(s)">
+                  <span class="seance-gauche">
+                    <strong>{{ heureFormatee(s.heure) }}</strong>
+                    <small>{{ dateFormatee(s.date) }} · {{ s.salle?.nom }}</small>
+                  </span>
+                  <span class="seance-action">Choisir cette séance →</span>
+                </button>
+              </li>
+            }
+          </ul>
+        }
       }
     </div>
   </div>

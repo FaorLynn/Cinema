@@ -1,4 +1,6 @@
 import { Component, HostListener, OnInit, signal } from '@angular/core';
+import { ChoisirPlaces } from '../choisir-places/choisir-places';
+import { Place } from '../../model/place';
 import { Film } from '../../model/film';
 import { Seance } from '../../model/seance';
 import { FilmService } from '../../service/film-service';
@@ -7,29 +9,34 @@ import { SeanceService } from '../../service/seance-service'; // adapte le chemi
 @Component({
   selector: 'app-tableau-film',
   standalone: true,
+  imports: [ChoisirPlaces],
   templateUrl: './tableau-film.html',
   styleUrl: './tableau-film.css',
-  providers: [FilmService]
+  providers: [FilmService],
 })
 export class TableauFilmComponent implements OnInit {
   films = signal<Film[]>([]);
+  seanceSelectionnee = signal<Seance | null>(null);
+  placesSelectionnees = signal<Place[]>([]);
   filmSelectionne = signal<Film | null>(null); // null = pop-up fermé
   seances = signal<Seance[]>([]);
   chargementSeances = signal(false);
 
   constructor(
     private filmService: FilmService,
-    private seanceService: SeanceService
+    private seanceService: SeanceService,
   ) {}
 
   ngOnInit(): void {
     this.filmService.findAll().subscribe({
       next: (data) => this.films.set(data),
-      error: (err) => console.error('Erreur de chargement des films', err)
+      error: (err) => console.error('Erreur de chargement des films', err),
     });
   }
 
   ouvrirReservation(film: Film): void {
+    this.seanceSelectionnee.set(null);
+    this.placesSelectionnees.set([]);
     this.filmSelectionne.set(film);
     this.seances.set([]);
 
@@ -44,12 +51,14 @@ export class TableauFilmComponent implements OnInit {
       error: (err) => {
         console.error('Erreur de chargement des séances', err);
         this.chargementSeances.set(false);
-      }
+      },
     });
   }
 
   fermerReservation(): void {
     this.filmSelectionne.set(null);
+    this.seanceSelectionnee.set(null);
+    this.placesSelectionnees.set([]);
   }
 
   @HostListener('document:keydown.escape')
@@ -58,8 +67,17 @@ export class TableauFilmComponent implements OnInit {
   }
 
   choisirSeance(seance: Seance): void {
-    console.log('Séance choisie', this.filmSelectionne()?.nom, seance);
-    // étape suivante : choix des sièges
+    this.placesSelectionnees.set([]);
+    this.seanceSelectionnee.set(seance);
+  }
+
+  retourAuxSeances(): void {
+    this.seanceSelectionnee.set(null);
+    this.placesSelectionnees.set([]);
+  }
+
+  preparerConfirmation(places: Place[]): void {
+    this.placesSelectionnees.set(places);
   }
 
   // "14:15:00" -> "14:15"
