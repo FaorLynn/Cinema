@@ -1,3 +1,4 @@
+
 nav {
   display: flex;
   align-items: center;
@@ -17,7 +18,16 @@ a.active {
   font-weight: bold;
 }
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   font-family: Arial, sans-serif;
   color: #222;
+}
+main {
+  flex: 1;
+}
+app-footer {
+  display: block;
+  
 }
