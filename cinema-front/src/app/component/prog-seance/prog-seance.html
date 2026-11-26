@@ -14,9 +14,9 @@
             <th scope="col">Date</th>
             <th scope="col">Heure</th>
             <th scope="col">Salle</th>
-            <th scope="col">Type</th>
             <th scope="col">Places</th>
             <th scope="col">Statut</th>
+            <th scope="col">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -26,12 +26,21 @@
               <td>{{ dateFormatee(s.date) }}</td>
               <td>{{ heureFormatee(s.heure) }}</td>
               <td>{{ s.salleNom }}</td>
-              <td>{{ typeLibelle(s.typeSalle) }}</td>
               <td>{{ s.placesDisponibles }} / {{ s.capacite }}</td>
               <td>
                 <span class="badge" [class.complete]="s.complete">
                   {{ s.complete ? 'Complète' : 'Places disponibles' }}
                 </span>
+              </td>
+              <td>
+                <div class="actions-ligne">
+                  <button type="button" class="btn-modifier" (click)="ouvrirModification(s)">
+                    Modifier
+                  </button>
+                  <button type="button" class="btn-supprimer" (click)="demanderSuppression(s)">
+                    Supprimer
+                  </button>
+                </div>
               </td>
             </tr>
           } @empty {
@@ -40,5 +49,93 @@
         </tbody>
       </table>
     </div>
+
+    <button type="button" class="btn-ajouter" (click)="ouvrirCreation()">
+      + Ajouter une séance
+    </button>
   }
 </section>
+
+<!-- Pop-up création / modification -->
+@if (popupOuvert()) {
+  <div class="overlay" (click)="fermerPopup()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <button type="button" class="fermer" (click)="fermerPopup()" aria-label="Fermer">✕</button>
+
+      <p class="modal-lieu">Programmation</p>
+      <h2 class="modal-titre">
+        {{ idEdition() === null ? 'Ajouter une séance' : 'Modifier la séance' }}
+      </h2>
+
+      <form class="formulaire" (ngSubmit)="enregistrer()">
+        <label>
+          Film
+          <select name="film" [(ngModel)]="form.filmId" required>
+            <option [ngValue]="null" disabled>-- Choisir un film --</option>
+            @for (f of films(); track f.id) {
+              <option [ngValue]="f.id">{{ f.nom }}</option>
+            }
+          </select>
+        </label>
+
+        <label>
+          Salle
+          <select name="salle" [(ngModel)]="form.salleId" required>
+            <option [ngValue]="null" disabled>-- Choisir une salle --</option>
+            @for (s of salles(); track s.id) {
+              <option [ngValue]="s.id">{{ s.nom }}</option>
+            }
+          </select>
+        </label>
+
+        <div class="duo">
+          <label>
+            Date
+            <input type="date" name="date" [(ngModel)]="form.date" required />
+          </label>
+          <label>
+            Heure
+            <input type="time" name="heure" [(ngModel)]="form.heure" required />
+          </label>
+        </div>
+
+        @if (erreurForm()) {
+          <p class="erreur" role="alert">{{ erreurForm() }}</p>
+        }
+
+        <div class="actions">
+          <button type="button" class="btn-secondaire" (click)="fermerPopup()">Annuler</button>
+          <button type="submit" class="btn-principal" [disabled]="enregistrement()">
+            {{ enregistrement() ? 'Enregistrement…'
+               : (idEdition() === null ? 'Créer la séance' : 'Enregistrer les modifications') }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+<!-- Pop-up de confirmation de suppression -->
+@if (seanceASupprimer(); as s) {
+  <div class="overlay" (click)="annulerSuppression()">
+    <div class="modal modal-petit" (click)="$event.stopPropagation()">
+      <p class="modal-lieu">Suppression</p>
+      <h2 class="modal-titre">Supprimer cette séance ?</h2>
+
+      <p class="confirmation-texte">
+        {{ s.filmNom }} · {{ dateFormatee(s.date) }} à {{ heureFormatee(s.heure) }} · {{ s.salleNom }}
+      </p>
+
+      @if (erreurSuppression()) {
+        <p class="erreur" role="alert">{{ erreurSuppression() }}</p>
+      }
+
+      <div class="actions">
+        <button type="button" class="btn-secondaire" (click)="annulerSuppression()">Annuler</button>
+        <button type="button" class="btn-danger" (click)="confirmerSuppression()" [disabled]="suppression()">
+          {{ suppression() ? 'Suppression…' : 'Supprimer' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

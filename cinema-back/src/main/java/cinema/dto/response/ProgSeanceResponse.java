@@ -7,9 +7,10 @@ public record ProgSeanceResponse(
         Integer id,
         LocalDate date,
         LocalTime heure,
+        Integer filmId,
         String filmNom,
+        Integer salleId,
         String salleNom,
-        String typeSalle,
         int capacite,
         int placesDisponibles,
         boolean complete) {

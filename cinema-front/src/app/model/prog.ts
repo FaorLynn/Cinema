@@ -2,9 +2,10 @@ export interface ProgSeance {
   id: number;
   date: string;
   heure: string;
+  filmId: number;
   filmNom: string;
+  salleId: number;
   salleNom: string;
-  typeSalle: string | null;
   capacite: number;
   placesDisponibles: number;
   complete: boolean;

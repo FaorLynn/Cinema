@@ -21,6 +21,7 @@ import cinema.dao.IDAOSalle;
 import cinema.dao.IDAOSeance;
 import cinema.dto.request.CreateSeanceRequest;
 import cinema.dto.response.ProgSeanceResponse;
+import cinema.dto.response.SalleOptionResponse;
 import cinema.dto.response.SeanceResponse;
 import cinema.model.Cinema;
 import cinema.model.Film;
@@ -148,34 +149,135 @@ public class SeanceRestController {
             .toList();
     }
 
-    @GetMapping("/programmation")
-    @Transactional
-    public List<ProgSeanceResponse> programmation(Principal principal) {
+    private Cinema cinemaDuResponsable(Principal principal) {
         if (principal == null) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
-
         Responsable responsable = daoResponsable.findByLogin(principal.getName())
             .orElseThrow(() -> new ResponseStatusException(
                 HttpStatus.FORBIDDEN, "Ce compte n'est pas un responsable"));
-
         Cinema cinema = responsable.getCinema();
         if (cinema == null) {
             throw new ResponseStatusException(
                 HttpStatus.NOT_FOUND, "Aucun cinéma lié à ce responsable");
         }
+        return cinema;
+    }   
 
+    private ProgSeanceResponse toProg(Seance s) {
+    int capacite = s.getSalle().getCapacite_max();
+    int disponibles = capacite - daoDetAchat.countBySeanceId(s.getId());
+    return new ProgSeanceResponse(
+        s.getId(), s.getDate(), s.getHeure(),
+        s.getFilm().getId(), s.getFilm().getNom(),
+        s.getSalle().getId(), s.getSalle().getNom(),
+        capacite, disponibles, disponibles <= 0);
+}
+
+    @GetMapping("/programmation")
+    @Transactional
+    public List<ProgSeanceResponse> programmation(Principal principal) {
+        Cinema cinema = cinemaDuResponsable(principal);
         return daoSeance.findByCinemaId(cinema.getId()).stream()
-            .map(s -> {
-                int capacite = s.getSalle().getCapacite_max();
-                int disponibles = capacite - daoDetAchat.countBySeanceId(s.getId());
-                return new ProgSeanceResponse(
-                    s.getId(), s.getDate(), s.getHeure(),
-                    s.getFilm().getNom(),
-                    s.getSalle().getNom(),
-                    s.getSalle().getType() != null ? s.getSalle().getType().name() : null,
-                    capacite, disponibles, disponibles <= 0);
-            })
+            .map(this::toProg)
             .toList();
+    }
+
+    @GetMapping("/programmation/salles")
+@Transactional
+public List<SalleOptionResponse> sallesDuCinema(Principal principal) {
+    Cinema cinema = cinemaDuResponsable(principal);
+    return daoSalle.findByCinemaId(cinema.getId()).stream()
+        .map(s -> new SalleOptionResponse(s.getId(), s.getNom()))
+        .toList();
+}
+
+    @PostMapping("/programmation")
+    @Transactional
+    public ProgSeanceResponse creerDansMonCinema(@RequestBody CreateSeanceRequest request,
+            Principal principal) {
+        Cinema cinema = cinemaDuResponsable(principal);
+
+        Salle salle = daoSalle.findById(request.salleId())
+           .orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "Salle introuvable : " + request.salleId()));
+
+        if (salle.getCinema() == null || !salle.getCinema().getId().equals(cinema.getId())) {
+            throw new ResponseStatusException(
+                HttpStatus.FORBIDDEN, "Cette salle n'appartient pas à votre cinéma");
+        }
+
+        Film film = daoFilm.findById(request.filmId())
+            .orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "Film introuvable : " + request.filmId()));
+
+    Seance seance = new Seance();
+    seance.setDate(request.date());
+    seance.setHeure(request.heure());
+    seance.setSalle(salle);
+    seance.setFilm(film);
+
+    return toProg(daoSeance.save(seance));
+}
+
+    // Récupère une séance en vérifiant qu'elle appartient au cinéma du responsable
+    private Seance seanceDeMonCinema(Integer id, Cinema cinema) {
+        Seance seance = daoSeance.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "Séance introuvable : " + id));
+        Salle salle = seance.getSalle();
+        if (salle.getCinema() == null || !salle.getCinema().getId().equals(cinema.getId())) {
+            throw new ResponseStatusException(
+                HttpStatus.FORBIDDEN, "Cette séance n'appartient pas à votre cinéma");
+        }
+        return seance;
+    }
+
+    @PutMapping("/programmation/{id}")
+    @Transactional
+    public ProgSeanceResponse modifierDansMonCinema(@PathVariable Integer id,
+            @RequestBody CreateSeanceRequest request, Principal principal) {
+        Cinema cinema = cinemaDuResponsable(principal);
+        Seance seance = seanceDeMonCinema(id, cinema);
+
+        Salle salle = daoSalle.findById(request.salleId())
+            .orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "Salle introuvable : " + request.salleId()));
+        if (salle.getCinema() == null || !salle.getCinema().getId().equals(cinema.getId())) {
+            throw new ResponseStatusException(
+                HttpStatus.FORBIDDEN, "Cette salle n'appartient pas à votre cinéma");
+        }
+
+        // On ne passe pas dans une salle plus petite que le nombre de places déjà réservées
+        int reservations = daoDetAchat.countBySeanceId(id);
+        if (reservations > salle.getCapacite_max()) {
+            throw new ResponseStatusException(
+                HttpStatus.CONFLICT,
+                "Cette salle est trop petite : " + reservations + " places déjà réservées");
+        }
+
+        Film film = daoFilm.findById(request.filmId())
+            .orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "Film introuvable : " + request.filmId()));
+
+        seance.setDate(request.date());
+        seance.setHeure(request.heure());
+        seance.setSalle(salle);
+        seance.setFilm(film);
+
+        return toProg(daoSeance.save(seance));
+    }
+
+    @DeleteMapping("/programmation/{id}")
+    @Transactional
+    public void supprimerDansMonCinema(@PathVariable Integer id, Principal principal) {
+        Cinema cinema = cinemaDuResponsable(principal);
+        Seance seance = seanceDeMonCinema(id, cinema);
+
+        if (daoDetAchat.countBySeanceId(id) > 0) {
+            throw new ResponseStatusException(
+                HttpStatus.CONFLICT, "Des places sont déjà réservées pour cette séance");
+        }
+        daoSeance.delete(seance);
     }
 }
