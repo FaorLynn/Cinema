@@ -1,13 +1,63 @@
-p {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  padding: 40px 28px;
-  background: #1b1d1c;
-  border: 1px solid #2c2e2d;
-  border-radius: 8px;
+:host {
+  display: block;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 1.5rem;
   color: #fff;
-  font-family: 'DM Sans', Arial, Helvetica, sans-serif;
-  box-sizing: border-box;
+}
+
+h1, h2, h3 {
+  color: #ffce32;
+}
+
+h1 {
+  display: inline-block;
+  margin-right: 1rem;
+}
+
+button.ajouter {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: none;
+  border-radius: 50%;
+  background: #ffce32;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 500px;
+  margin-bottom: 2rem;
+}
+
+form div {
+  display: flex;
+  flex-direction: column;
+}
+
+fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border: 1px solid #353633;
+}
+
+input {
+  padding: 0.5rem;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+article {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border: 1px solid #353633;
+  border-left: 6px solid #ffce32;
+  border-radius: 8px;
 }

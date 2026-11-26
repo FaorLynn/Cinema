@@ -21,7 +21,7 @@ export class CinemaGestion {
 
   protected cinemas = signal<Cinema[]>([]);
 
- protected cinema$!: Observable<Cinema[]>;
+ 
   protected responsables$!: Observable<Responsable[]>;
   private refresh$: Subject<void> = new Subject<void>();
 
@@ -37,6 +37,8 @@ export class CinemaGestion {
   //responsable
   protected formCinemaLoginCtrl!: FormControl;
   protected formCinemaPasswordCtrl!: FormControl;
+
+  protected afficherFormulaire = signal(false);
   constructor(
 
     private cinemaService: CinemaService,
@@ -78,29 +80,54 @@ export class CinemaGestion {
     });
     
 
-    this.cinema$ = this.refresh$.pipe(
-      startWith(null),
-      switchMap(() => this.cinemaService.findAll())
-    );
+    this.chargerCinemas();
+
+    console.log(this.cinemas)
   }  
 
   protected ajouterOuModifier() {
-    if (this.formCinemaGrp.invalid) {return;}
-
-    const cinema: Cinema = {
-      ...this.formCinemaGrp.getRawValue(),
-      id: this.editingCinemaId
-    };
-
-    this.cinemaService.save(cinema).subscribe(() => {
-      this.refresh$.next();
-    });
-
-    this.formCinemaGrp.reset();
-    this.editingCinemaId = undefined;
+  if (this.formCinemaGrp.invalid) {
+    return;
   }
 
+  const formValue = this.formCinemaGrp.getRawValue();
+
+  // 1. Création du responsable
+  const responsable: Responsable = {
+    ...formValue.responsable
+  };
+
+  this.responsableService.save(responsable).subscribe({
+    next: (responsableCree) => {
+
+      // 2. Création du cinéma avec l'ID du responsable
+      if (responsableCree.id === undefined) {
+         console.log(responsableCree)
+        console.log(responsableCree.id)
+    return;
+  }
+      const cinema: Cinema = {
+        nom: formValue.nom,
+        adresse: formValue.adresse,
+        
+        responsableId: responsableCree.id
+      };
+
+      // 3. Enregistrement du cinéma
+      this.cinemaService.save(cinema).subscribe(() => {
+        this.chargerCinemas();
+        this.formCinemaGrp.reset();
+        this.editingCinemaId = undefined;
+      });
+    }
+  });
+  this.afficherFormulaire.set(false)
+}
+
+
+
   protected editer(cinema: Cinema) {
+    this.afficherFormulaire.set(true)
     this.editingCinemaId = cinema.id;
 
     this.formCinemaGrp.patchValue({
@@ -112,13 +139,25 @@ export class CinemaGestion {
 
   protected supprimer(cinema: Cinema) {
     this.cinemaService.remove(cinema).subscribe(() => {
-      this.refresh$.next();
+      this.chargerCinemas();
     });
   }
 
   protected annulerEdition() {
     this.editingCinemaId = undefined;
+    this.afficherFormulaire.set(false)
     this.formCinemaGrp.reset();
   }
+
+  protected chargerCinemas() {
+  this.cinemaService.findAll().subscribe({
+    next: (cinemas) => {
+      this.cinemas.set(cinemas);
+    },
+    error: (err) => {
+      console.error("Erreur lors du chargement des cinémas", err);
+    }
+  });
+}
 }
 

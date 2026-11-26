@@ -1,9 +1,14 @@
 
 <h1>Gestion des cinémas</h1>
-
-
+<button
+  class="ajouter cinema"
+  type="button"
+  (click)="afficherFormulaire.set(true)">
+  +
+</button>
 <!-- FORMULAIRE -->
-
+@if(afficherFormulaire()){
+   
 <section>
   <h2>
     {{ editingCinemaId ? 'Modifier un cinéma' : 'Ajouter un cinéma' }}
@@ -63,9 +68,9 @@
       <div>
         <label for="login">Login</label>
         <input
-          id="Login"
+          id="login"
           type="text"
-          formControlName="Login">
+          formControlName="login">
       </div>
 
       <div>
@@ -87,7 +92,7 @@
 
     <button
       type="button"
-      *ngIf="editingCinemaId"
+      
       (click)="annulerEdition()">
       Annuler
     </button>
@@ -96,44 +101,32 @@
 </section>
 
 
+}
 
 
-
+<!-- LISTE DES CINEMAS -->
 <!-- LISTE DES CINEMAS -->
 <section>
   <h2>Liste des cinémas</h2>
 
-  <div *ngIf="cinema$ | async as cinemas">
+  <p>Nombre de cinémas : {{ cinemas().length }}</p>
 
-    <p *ngIf="cinemas.length === 0">
-      Aucun cinéma enregistré.
+  <article *ngFor="let cinema of cinemas()">
+    <h3>{{ cinema.nom }}</h3>
+
+    <p>
+      {{ cinema.adresse?.numero }}
+      {{ cinema.adresse?.voie }},
+      {{ cinema.adresse?.cp }}
+      {{ cinema.adresse?.ville }}
     </p>
 
-    <article *ngFor="let cinema of cinemas">
+    <button type="button" (click)="editer(cinema)">
+      Modifier
+    </button>
 
-      <h3>{{ cinema.nom }}</h3>
-
-      <p>
-        Adresse :
-        {{ cinema.adresse?.numero }}
-        {{ cinema.adresse?.voie }},
-        {{ cinema.adresse?.cp }}
-        {{ cinema.adresse?.ville }}
-      </p>
-
-      <p>
-        Identifiant du responsable : {{ cinema.responsableId }}
-      </p>
-
-      <button type="button" (click)="editer(cinema)">
-        Modifier
-      </button>
-
-      <button type="button" (click)="supprimer(cinema)">
-        Supprimer
-      </button>
-
-    </article>
-
-  </div>
+    <button type="button" (click)="supprimer(cinema)">
+      Supprimer
+    </button>
+  </article>
 </section>

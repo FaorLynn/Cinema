@@ -16,7 +16,7 @@ import jakarta.persistence.InheritanceType;
 public abstract class Compte {
     @Id 
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Integer Id;
+    private Integer id;
 
     @Column(length = 35,nullable = false,unique = true)
     private String login;
@@ -27,18 +27,18 @@ public abstract class Compte {
     public Compte() {
     }
 
-    public Compte(Integer Id, String login, String password) {
-        this.Id = Id;
+    public Compte(Integer id, String login, String password) {
+        this.id = id;
         this.login = login;
         this.password = password;
     }
 
     public Integer getId() {
-        return Id;
+        return id;
     }
 
     public void setId(Integer Id) {
-        this.Id = Id;
+        this.id = Id;
     }
 
     public String getLogin() {
