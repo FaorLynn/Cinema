@@ -29,6 +29,6 @@ export const routes: Routes = [
   { path: 'films', component: FilmsPage ,canActivate: [authGuard]},
   { path: 'reservations', component: ReservationsPage,canActivate: [authGuard]},
   { path: 'equipe', component: EquipePage,canActivate: [authGuard]},
-  {path:'cinema',component:CinemaGestion}
+  
   
 ];
