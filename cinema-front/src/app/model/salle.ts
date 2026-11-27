@@ -5,4 +5,5 @@ export interface Salle {
     nom : string ;
     capacite_max : number ;
     Cinema : Cinema ;
+    type?:string;
 }

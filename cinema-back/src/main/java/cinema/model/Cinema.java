@@ -2,6 +2,7 @@ package cinema.model;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -30,7 +31,7 @@ public class Cinema {
     @OneToMany(mappedBy = "cinema", fetch = FetchType.LAZY)
     private List<Salle> salles;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JoinColumn(name = "responsable")
     private Responsable responsable;
 

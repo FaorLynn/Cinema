@@ -16,33 +16,88 @@ h1 {
 }
 
 button.ajouter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
   width: 2.5rem;
   height: 2.5rem;
+  padding: 0;
   border: none;
-  border-radius: 50%;
+  border-radius: 2rem;
   background: #ffce32;
+  color: #111;
   font-size: 1.5rem;
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
   cursor: pointer;
+  transition: width 0.3s ease, transform 0.2s ease, background 0.2s ease, color 0.2s ease;
 }
 
+button.ajouter:hover {
+  width: 13rem;
+  transform: scale(1.1);
+  background: #111;
+  color: #ffce32;
+  box-shadow: inset 0 0 0 2px #ffce32;
+}
+
+button.ajouter:hover::after {
+  content: "ajouter un cinéma";
+  font-size: 1rem;
+}
 form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem 2rem;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  border: 2px solid #ffce32;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+}
+.col-gauche,
+.col-droite {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  max-width: 500px;
-  margin-bottom: 2rem;
 }
 
-form div {
+.champ {
   display: flex;
   flex-direction: column;
 }
 
+.actions {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.actions button {
+  min-width: 160px;
+  height: 2.5rem;
+}
 fieldset {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  border: 1px solid #353633;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+legend,
+label[for="nom"] {
+  padding: 0;
+  margin-bottom: 0.5rem;
+  color: #ffce32;
+  font-weight: bold;
+  font-size: 1.1rem;
 }
 
 input {
@@ -53,11 +108,128 @@ button {
   padding: 0.5rem 1rem;
   cursor: pointer;
 }
-
-article {
-  margin-bottom: 1rem;
-  padding: 1rem;
+.info {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0;                         /* était margin-bottom: 1rem */
+  padding: 1rem 3rem 1rem 1rem;
   border: 1px solid #353633;
   border-left: 6px solid #ffce32;
   border-radius: 8px;
+}
+/* la marge passe sur l'article, plus sur .info */
+article {
+  margin-bottom: 1.5rem;
+}
+.titre {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.info h3,
+.info p {
+
+  margin: 0;
+}
+
+/* ----- Croix rouge ----- */
+.info button.supprimer {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  width: 1.8rem;
+  height: 1.8rem;
+  min-width: 0;
+  padding: 0;
+  border: 2px solid #e53935;
+  border-radius: 50%;
+  background: transparent;
+  color: #e53935;
+  font-size: 0.9rem;
+  line-height: 1;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+}
+
+.info button.supprimer:hover {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  background: #e53935;
+  color: #fff;
+  transform: scale(1.15);
+}
+
+/* ----- Flèche "Voir les salles" ----- */
+.info button.voir-salles {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border-radius: 2rem;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: width 0.3s ease, transform 0.2s ease, background 0.2s, color 0.2s;
+}
+
+.info button.voir-salles:hover {
+  width: 9.5rem;
+  transform: scale(1.08);
+  background: #111;
+  color: #ffce32;
+  box-shadow: inset 0 0 0 2px #ffce32;
+}
+
+.info button.voir-salles:hover::after {
+  content: "\00a0Voir les salles";
+  font-size: 0.9rem;
+}
+
+/* la flèche se retourne quand les salles sont ouvertes */
+.fleche {
+  display: inline-block;
+  transition: transform 0.3s;
+}
+
+.voir-salles.ouvert .fleche {
+  transform: rotate(180deg);
+}
+/* ---------- Panneau des salles (dans le ticket) ---------- */
+app-salle-gestion {
+  display: block;
+  margin: 1rem 0 0 2rem;             /* espace sous le cinéma + indentation */
+  padding-bottom: 1rem;              /* compense le décalage translateY des salles paires */
+}
+
+/* boutons du formulaire */
+button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  background: #ffce32;
+  color: #111;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+button.secondaire {
+  background: transparent;
+  color: #ffce32;
+  box-shadow: inset 0 0 0 2px #ffce32;
+}
+
+button.secondaire:hover {
+  background: #ffce32;
+  color: #111;
 }

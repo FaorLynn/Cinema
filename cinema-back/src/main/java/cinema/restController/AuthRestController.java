@@ -45,7 +45,7 @@ public class AuthRestController {
         this.passwordEncoder = passwordEncoder;
         this.daoCompte = daoCompte;
     }
-    @PostMapping("auth")
+    @PostMapping("/auth")
     public AuthResponse auth(@RequestBody AuthRequest request) {
         Authentication auth = new UsernamePasswordAuthenticationToken(request.login(), request.password());
         Compte compte = this.daoCompte.findByLogin(request.login()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));

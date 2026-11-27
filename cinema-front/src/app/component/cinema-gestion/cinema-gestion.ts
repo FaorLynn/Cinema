@@ -4,13 +4,15 @@ import { AuthService } from '../../service/auth-service';
 import { Cinema } from '../../model/cinema';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Title } from '@angular/platform-browser';
+
 import { Observable, Subject, startWith, switchMap } from 'rxjs';
 import { Responsable } from '../../model/responsable';
 import { ResponsableService } from '../../service/responsable-service';
 
+import { SalleGestion } from '../salle-gestion/salle-gestion';
+
 @Component({
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, SalleGestion],
   selector: 'app-cinema-gestion',
   styleUrl: './cinema-gestion.css',
   templateUrl: './cinema-gestion.html',
@@ -39,6 +41,7 @@ export class CinemaGestion {
   protected formCinemaPasswordCtrl!: FormControl;
 
   protected afficherFormulaire = signal(false);
+  protected cinemasOuvertId = signal<number | null>(null);
   constructor(
 
     private cinemaService: CinemaService,
@@ -158,6 +161,11 @@ export class CinemaGestion {
       console.error("Erreur lors du chargement des cinémas", err);
     }
   });
+}
+protected cinemaSelected(cinema: Cinema) {
+  this.cinemasOuvertId.set(
+    this.cinemasOuvertId() === cinema.id ? null : (cinema.id ?? null)
+  );
 }
 }
 

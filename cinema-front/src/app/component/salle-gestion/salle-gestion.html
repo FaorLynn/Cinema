@@ -1,0 +1,53 @@
+<div class="titre-cinema">
+<p>Salles </p>
+
+<button type="button" class="ajouter" (click)="salleFormShow.set(true)">
+  +
+</button>
+</div>
+@if (salleFormShow()) {
+  <form [formGroup]="formSalleGrp" (ngSubmit)="save()">
+    <fieldset>
+      <legend>Salle</legend>
+
+      <div class="champ">
+        <label for="nomSalle">Nom</label>
+        <input id="nomSalle" type="text" formControlName="nom">
+      </div>
+      <div class="champ">
+        <label for="nbrRange">Nombre de rangées</label>
+        <input id="nbrRange" type="number" formControlName="nbrRange">
+      </div>
+      <div class="champ">
+        <label for="capaciteRange">Nombre de colonnes</label>
+        <input id="capaciteRange" type="number" formControlName="capaciteRange">
+      </div>
+      <div class="champ">
+        <label for="type">Type</label>
+        <select id="type" formControlName="type">
+          <option value="" disabled>-- Choisir un type --</option>
+          <option *ngFor="let t of typesSalle" [value]="t.value">{{ t.label }}</option>
+        </select>
+      </div>
+    </fieldset>
+
+    <div class="actions">
+      <button type="submit" [disabled]="formSalleGrp.invalid">Ajouter la salle</button>
+      <button type="button" class="secondaire" (click)="annulerEdition()">Annuler</button>
+    </div>
+  </form>
+}
+
+<article *ngFor="let salle of salles()">
+  <button
+    type="button"
+    class="supprimer"
+    title="Supprimer"
+    aria-label="Supprimer la salle"
+    (click)="supprimer(salle)">
+    ✕
+  </button>
+  <p>Salle : {{ salle.nom }}</p>
+  <p>Capacité max : {{ salle.capacite_max }}</p>
+  <p>Type de salle : {{ salle.type }}</p>
+</article>
