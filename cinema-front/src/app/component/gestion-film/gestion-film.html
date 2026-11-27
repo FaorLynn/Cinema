@@ -1,5 +1,5 @@
 <div class="gestion-films">
-
+    <div class="titre">
   <h2>Gestion des films</h2>
 
   <!-- Bouton ajouter -->
@@ -9,7 +9,7 @@
     (click)="ouvrirFormulaire()">
     +
   </button>
-
+</div>
   <!-- Formulaire d'ajout -->
   @if (formulaireOuvert()) {
     <form (ngSubmit)="ajouter()">
