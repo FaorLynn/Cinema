@@ -1,4 +1,6 @@
-import { Component, HostListener, OnInit, signal } from '@angular/core';
+import { Component, HostListener, inject, OnInit, signal } from '@angular/core';
+import { AuthService } from '../../service/auth-service';
+import { RecapitulatifReservation } from '../recapitulatif-reservation/recapitulatif-reservation';
 import { ChoisirPlaces } from '../choisir-places/choisir-places';
 import { Place } from '../../model/place';
 import { Film } from '../../model/film';
@@ -9,12 +11,14 @@ import { SeanceService } from '../../service/seance-service'; // adapte le chemi
 @Component({
   selector: 'app-tableau-film',
   standalone: true,
-  imports: [ChoisirPlaces],
+  imports: [ChoisirPlaces, RecapitulatifReservation],
   templateUrl: './tableau-film.html',
   styleUrl: './tableau-film.css',
   providers: [FilmService],
 })
 export class TableauFilmComponent implements OnInit {
+  private readonly auth = inject(AuthService);
+  readonly afficherRecapitulatif = signal(false);
   films = signal<Film[]>([]);
   seanceSelectionnee = signal<Seance | null>(null);
   placesSelectionnees = signal<Place[]>([]);
@@ -36,6 +40,7 @@ export class TableauFilmComponent implements OnInit {
 
   ouvrirReservation(film: Film): void {
     this.seanceSelectionnee.set(null);
+    this.afficherRecapitulatif.set(false);
     this.placesSelectionnees.set([]);
     this.filmSelectionne.set(film);
     this.seances.set([]);
@@ -58,6 +63,7 @@ export class TableauFilmComponent implements OnInit {
   fermerReservation(): void {
     this.filmSelectionne.set(null);
     this.seanceSelectionnee.set(null);
+    this.afficherRecapitulatif.set(false);
     this.placesSelectionnees.set([]);
   }
 
@@ -67,17 +73,25 @@ export class TableauFilmComponent implements OnInit {
   }
 
   choisirSeance(seance: Seance): void {
+    this.afficherRecapitulatif.set(false);
     this.placesSelectionnees.set([]);
     this.seanceSelectionnee.set(seance);
   }
 
   retourAuxSeances(): void {
     this.seanceSelectionnee.set(null);
+    this.afficherRecapitulatif.set(false);
     this.placesSelectionnees.set([]);
   }
 
   preparerConfirmation(places: Place[]): void {
-    this.placesSelectionnees.set(places);
+    if (this.auth.hasRole('ADMIN') || !this.seanceSelectionnee() || places.length === 0) return;
+    this.placesSelectionnees.set([...places]);
+    this.afficherRecapitulatif.set(true);
+  }
+
+  retourAuxSieges(): void {
+    this.afficherRecapitulatif.set(false);
   }
 
   // "14:15:00" -> "14:15"

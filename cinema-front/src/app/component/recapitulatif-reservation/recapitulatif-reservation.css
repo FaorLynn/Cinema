@@ -1,0 +1,71 @@
+h3 {
+  margin: 0 0 12px;
+  color: var(--yellow, #ffc928);
+}
+.introduction,
+dt,
+.statut {
+  color: #bbb;
+}
+.informations {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  padding: 20px;
+  background: #242420;
+  border-radius: 8px;
+}
+dt {
+  font-size: 0.85rem;
+  margin-bottom: 6px;
+}
+dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-weight: 600;
+}
+.sieges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 0;
+  list-style: none;
+}
+.sieges li {
+  border: 1px solid var(--yellow, #ffc928);
+  border-radius: 6px;
+  padding: 10px 14px;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 24px;
+}
+button {
+  font: inherit;
+  background: #242420;
+  color: #fff;
+  border: 1px solid #777;
+  border-radius: 6px;
+  padding: 10px 14px;
+  cursor: pointer;
+}
+.retour {
+  border-color: var(--yellow, #ffc928);
+  color: var(--yellow, #ffc928);
+}
+button:focus-visible {
+  outline: 3px solid var(--yellow, #ffc928);
+  outline-offset: 3px;
+}
+.erreur {
+  border-left: 3px solid #e99c77;
+  padding-left: 14px;
+}
+@media (max-width: 480px) {
+  .informations {
+    grid-template-columns: 1fr;
+  }
+}

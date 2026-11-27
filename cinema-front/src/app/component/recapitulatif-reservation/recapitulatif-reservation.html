@@ -1,0 +1,67 @@
+<section aria-labelledby="titre-recapitulatif">
+  <h3 id="titre-recapitulatif" tabindex="-1">Votre récapitulatif</h3>
+
+  @if (estAdmin) {
+    <p role="status">
+      Le récapitulatif de réservation n’est pas accessible en mode administrateur.
+    </p>
+  } @else if (places().length === 0) {
+    <p role="status">Choisissez au moins un siège pour afficher votre récapitulatif.</p>
+  } @else {
+    <p class="introduction">Vérifiez votre séance et vos sièges.</p>
+    <dl class="informations">
+      <div>
+        <dt>Film</dt>
+        <dd>{{ film().nom }}</dd>
+      </div>
+      <div>
+        <dt>Cinéma</dt>
+        <dd>
+          @if (chargement()) {
+            <span role="status">Chargement…</span>
+          } @else {
+            {{ cinema()?.nom ?? seance().salle?.Cinema?.nom ?? 'Non renseigné' }}
+          }
+        </dd>
+      </div>
+      <div>
+        <dt>Salle</dt>
+        <dd>{{ seance().salle?.nom ?? 'Non renseignée' }}</dd>
+      </div>
+      <div>
+        <dt>Date</dt>
+        <dd>{{ seance().date | date: 'dd/MM/yyyy' }}</dd>
+      </div>
+      <div>
+        <dt>Horaire</dt>
+        <dd>{{ seance().heure.slice(0, 5) }}</dd>
+      </div>
+      <div>
+        <dt>Nombre de sièges</dt>
+        <dd>{{ places().length }}</dd>
+      </div>
+    </dl>
+
+    @if (erreur()) {
+      <div role="alert" class="erreur">
+        <p>{{ erreur() }}</p>
+        <button type="button" (click)="chargerCinema()">Réessayer</button>
+      </div>
+    }
+
+    <h4>Vos sièges</h4>
+    <ul class="sieges">
+      @for (place of placesTriees(); track place.id) {
+        <li>
+          Rangée <strong>{{ place.range }}</strong> · Siège <strong>{{ place.col }}</strong>
+        </li>
+      }
+    </ul>
+    <p class="statut">Votre sélection n’est pas encore réservée.</p>
+  }
+
+  <div class="actions">
+    <button type="button" class="retour" (click)="retour.emit()">← Modifier les sièges</button>
+    <button type="button" (click)="fermer.emit()">Fermer</button>
+  </div>
+</section>

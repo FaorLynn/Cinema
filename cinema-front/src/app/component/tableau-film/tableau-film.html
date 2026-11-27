@@ -44,22 +44,26 @@
 
       <ol class="etapes">
         <li [class.actif]="!seanceSelectionnee()">01 · La séance</li>
-        <li [class.actif]="!!seanceSelectionnee()">02 · Vos sièges</li>
-        <li>03 · Confirmation</li>
+        <li [class.actif]="!!seanceSelectionnee() && !afficherRecapitulatif()">02 · Vos sièges</li>
+        <li [class.actif]="afficherRecapitulatif()">03 · Récapitulatif</li>
       </ol>
 
       @if (seanceSelectionnee(); as seance) {
         <app-choisir-places
+          [hidden]="afficherRecapitulatif()"
           [seance]="seance"
           (retour)="retourAuxSeances()"
           (selectionModifiee)="placesSelectionnees.set([])"
           (continuer)="preparerConfirmation($event)"
         />
-        @if (placesSelectionnees().length > 0) {
-          <p role="status">
-            Sélection préparée : {{ placesSelectionnees().length }} siège(s). La confirmation
-            d’achat sera raccordée à l’étape suivante. Aucun achat enregistré.
-          </p>
+        @if (afficherRecapitulatif()) {
+          <app-recapitulatif-reservation
+            [film]="film"
+            [seance]="seance"
+            [places]="placesSelectionnees()"
+            (retour)="retourAuxSieges()"
+            (fermer)="fermerReservation()"
+          />
         }
       } @else {
         <p class="modal-intro">Choisissez votre horaire.</p>

@@ -38,6 +38,12 @@ describe('TableauFilm : parcours vers les sièges', () => {
     fixture.nativeElement.querySelector('.principal').click();
     fixture.detectChanges();
     expect(component.placesSelectionnees().length).toBe(1);
+    expect(fixture.nativeElement.querySelector('app-recapitulatif-reservation')).not.toBeNull();
+    expect(component.afficherRecapitulatif()).toBe(true);
+    fixture.nativeElement.querySelector('app-recapitulatif-reservation .retour').click();
+    fixture.detectChanges();
+    expect(component.afficherRecapitulatif()).toBe(false);
+    expect(fixture.nativeElement.querySelector('.siege').getAttribute('aria-pressed')).toBe('true');
     fixture.nativeElement.querySelector('.siege').click();
     fixture.detectChanges();
     expect(component.placesSelectionnees()).toEqual([]);
