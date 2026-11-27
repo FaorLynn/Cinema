@@ -1,0 +1,71 @@
+
+@if (chargement()) {
+  <p>Chargement de vos informations...</p>
+} @else if (utilisateur) {
+  <main class="parametres">
+    <h1>Mes paramètres</h1>
+
+    <form (ngSubmit)="enregistrer()">
+
+      <section>
+        <h2>Informations personnelles</h2>
+
+        <label>Nom</label>
+        <input name="nom" [(ngModel)]="utilisateur.nom" (ngModelChange)="effacerMessage()" required>
+
+        <label>Prénom</label>
+        <input name="prenom" [(ngModel)]="utilisateur.prenom" (ngModelChange)="effacerMessage()" required>
+
+        <label>Login</label>
+        <input name="login" [(ngModel)]="utilisateur.login" (ngModelChange)="effacerMessage()" required>
+      </section>
+
+      <section>
+        <h2>Mon adresse</h2>
+
+        <label>Numéro</label>
+        <input name="numero" [(ngModel)]="utilisateur.adresse!.numero" (ngModelChange)="effacerMessage()" >
+
+        <label>Voie</label>
+        <input name="voie" [(ngModel)]="utilisateur.adresse!.voie" (ngModelChange)="effacerMessage()" >
+
+        <label>Code postal</label>
+        <input name="cp" [(ngModel)]="utilisateur.adresse!.cp" (ngModelChange)="effacerMessage()" >
+
+        <label>Ville</label>
+        <input name="ville" [(ngModel)]="utilisateur.adresse!.ville" (ngModelChange)="effacerMessage()" >
+      </section>
+
+      <section>
+        <h2>Modifier mon mot de passe</h2>
+
+        <label>Nouveau mot de passe</label>
+        <input
+          type="password"
+          name="nouveauPassword"
+          [(ngModel)]="nouveauPassword"
+          (ngModelChange)="effacerMessage()" >
+
+        <label>Confirmer le nouveau mot de passe</label>
+        <input
+          type="password"
+          name="confirmationPassword"
+          [(ngModel)]="confirmationPassword"
+          (ngModelChange)="effacerMessage()" >
+      </section>
+
+      @if (message()) {
+        <p class="success">{{ message() }}</p>
+      }
+
+      @if (erreur()) {
+        <p class="error">{{ erreur() }}</p>
+      }
+
+      <button type="submit" [disabled]="!modifications">
+        Enregistrer mes modifications
+      </button>
+
+    </form>
+  </main>
+}

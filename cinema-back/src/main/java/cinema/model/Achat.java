@@ -2,6 +2,8 @@ package cinema.model;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,6 +26,7 @@ public class Achat {
 
     @ManyToOne 
     @JoinColumn(name ="utilisateur_id", nullable = false)
+    @JsonIgnore
     private Utilisateur utilisateur;
 
     public Achat() {
