@@ -19,8 +19,16 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./page/responsable-page/responsable-page').then((m) => m.ResponsablePage),
   },
-  { path: '', pathMatch: 'full', redirectTo: 'login' },
-  {path:'login',component:LoginPage},
+
+  { 
+    path: 'parametres', 
+    loadComponent: () => 
+      import('./pages/parametres-page/parametres-page').then((m) => m.ParametresPage), 
+    canActivate: [authGuard]
+  },
+
+  { path: '', pathMatch: 'full', redirectTo: 'login'},
+  { path:'login',component:LoginPage},
   { path: 'places', component: PlacePage,canActivate: [authGuard]},
   { path: 'seances', component: SeancePage,canActivate: [authGuard]},
   { path: 'comptes', component: ComptePage,canActivate: [authGuard]},

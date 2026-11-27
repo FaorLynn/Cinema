@@ -1,0 +1,61 @@
+.parametres {
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 25px;
+  color: #f1f1f1;
+}
+
+h1 {
+  margin-bottom: 30px;
+  color: #fff;
+}
+
+section {
+  margin-bottom: 30px;
+  padding: 20px;
+  border: 1px solid #555;
+  border-radius: 8px;
+  color: #f1f1f1;
+}
+
+h2 {
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+label {
+  display: block;
+  margin: 12px 0 5px;
+  color: #f1f1f1;
+}
+
+input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #666;
+  border-radius: 5px;
+  background: #333;
+  color: #fff;
+}
+
+input::placeholder {
+  color: #bbb;
+}
+
+button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  background: #444;
+  color: #fff;
+  cursor: pointer;
+}
+
+.success {
+  color: #4ade80;
+}
+
+.error {
+  color: #ff6b6b;
+}

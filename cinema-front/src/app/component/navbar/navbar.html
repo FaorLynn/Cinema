@@ -8,6 +8,7 @@
 
     @if (authService.hasRole('UTILISATEUR')) {
       <a [routerLink]="['/reservations']" routerLinkActive="active">Mes réservations</a>
+      <a [routerLink]="['/parametres']" routerLinkActive="active"> Paramètres</a>
     }
 
     @if (authService.hasRole('ADMIN', 'RESPONSABLE')) {

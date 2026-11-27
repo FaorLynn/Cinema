@@ -4,7 +4,7 @@ import { map, Observable } from 'rxjs';
 import { Utilisateur } from '../model/utilisateur';
 
 interface UtilisateurResponse {
-  id: number;
+  Id: number;
   login: string;
   nom: string;
   prenom: string;
@@ -20,13 +20,25 @@ export class UtilisateurService {
     return this.http.get<UtilisateurResponse[]>(this.apiUrl).pipe(
       map((accounts) =>
         accounts.map((account) => ({
-          id: account.id,
+          id: account.Id,
           login: account.login,
           nom: account.nom,
           prenom: account.prenom,
           adresse: account.adresse,
         })),
       ),
+    );
+  }
+
+  public findById(id: number): Observable<Utilisateur> {
+    return this.http.get<UtilisateurResponse>(`${this.apiUrl}/${id}`).pipe(
+      map((account) => ({
+        id: account.Id,
+        login: account.login,
+        nom: account.nom,
+        prenom: account.prenom,
+        adresse: account.adresse,
+      }))
     );
   }
 
@@ -41,7 +53,9 @@ export class UtilisateurService {
     if (account.id === undefined) {
       return this.http.post<Utilisateur>(this.apiUrl, request);
     }
-    return this.http.put<Utilisateur>(`${this.apiUrl}/${account.id}`, request);
+    return this.http.put<UtilisateurResponse>(`${this.apiUrl}/${account.id}`, request).pipe(
+      map(response => ({ ...response, id: response.Id }))
+    );
   }
 
   public remove(account: Utilisateur): Observable<void> {
