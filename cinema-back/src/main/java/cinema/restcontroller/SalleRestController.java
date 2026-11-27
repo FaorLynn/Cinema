@@ -94,7 +94,17 @@ public class SalleRestController {
 
 	}
 
-	
+	@GetMapping("/cinema/{id}")
+@Transactional
+public List<SalleResponse> findByCinemaId(@PathVariable Integer id) {
+
+    log.info("Récupération des salles du cinéma id={}", id);
+
+    return this.daoSalle.findByCinemaId(id)
+        .stream()
+        .map(SalleResponse::convert)
+        .toList();
+}
 }
     
 

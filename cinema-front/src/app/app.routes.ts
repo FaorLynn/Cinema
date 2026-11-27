@@ -7,6 +7,7 @@ import { EquipePage } from './pages/equipe-page/equipe-page';
 import { ReservationsPage } from './pages/reservations-page/reservations-page';
 import { LoginPage } from './pages/login-page/login-page';
 import { authGuard } from './guard/auth-guard';
+import { CinemaGestion } from './component/cinema-gestion/cinema-gestion';
 
 export const routes: Routes = [
   {
@@ -27,6 +28,7 @@ export const routes: Routes = [
 
   { path: 'films', component: FilmsPage ,canActivate: [authGuard]},
   { path: 'reservations', component: ReservationsPage,canActivate: [authGuard]},
-  { path: 'equipe', component: EquipePage,canActivate: [authGuard]}
+  { path: 'equipe', component: EquipePage,canActivate: [authGuard]},
+  {path:'cinema',component:CinemaGestion}
   
 ];

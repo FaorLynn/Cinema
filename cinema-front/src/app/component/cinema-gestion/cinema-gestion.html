@@ -1,139 +1,119 @@
 
 <h1>Gestion des cinémas</h1>
-
-
+<button
+  class="ajouter cinema"
+  type="button"
+  (click)="afficherFormulaire.set(true)">
+  +
+</button>
 <!-- FORMULAIRE -->
-
+@if(afficherFormulaire()){
+   
 <section>
   <h2>
     {{ editingCinemaId ? 'Modifier un cinéma' : 'Ajouter un cinéma' }}
   </h2>
+<form [formGroup]="formCinemaGrp" (ngSubmit)="ajouterOuModifier()" class="form-cinema">
 
-  <form [formGroup]="formCinemaGrp"
-        (ngSubmit)="ajouterOuModifier()">
-
-    <div>
+  <div class="col-gauche">
+    <div class="champ">
       <label for="nom">Nom du cinéma</label>
-      <input
-        id="nom"
-        type="text"
-        formControlName="nom"
-        placeholder="Nom du cinéma">
+      <input id="nom" type="text" formControlName="nom" placeholder="Nom du cinéma">
     </div>
 
+    <fieldset formGroupName="responsable">
+      <legend>Responsable : </legend>
+      <div class="champ">
+        <label for="login">Login</label>
+        <input id="login" type="text" formControlName="login">
+      </div>
+      <div class="champ">
+        <label for="password">Mot de passe</label>
+        <input id="password" type="password" formControlName="password">
+      </div>
+    </fieldset>
+  </div>
+
+  <div class="col-droite">
     <fieldset formGroupName="adresse">
       <legend>Adresse</legend>
-
-      <div>
+      <div class="champ">
         <label for="numero">Numéro</label>
-        <input
-          id="numero"
-          type="text"
-          formControlName="numero">
+        <input id="numero" type="text" formControlName="numero">
       </div>
-
-      <div>
+      <div class="champ">
         <label for="voie">Voie</label>
-        <input
-          id="voie"
-          type="text"
-          formControlName="voie">
+        <input id="voie" type="text" formControlName="voie">
       </div>
-
-      <div>
+      <div class="champ">
         <label for="ville">Ville</label>
-        <input
-          id="ville"
-          type="text"
-          formControlName="ville">
+        <input id="ville" type="text" formControlName="ville">
       </div>
-
-      <div>
+      <div class="champ">
         <label for="cp">Code postal</label>
-        <input
-          id="cp"
-          type="text"
-          formControlName="cp">
+        <input id="cp" type="text" formControlName="cp">
       </div>
     </fieldset>
+  </div>
 
-     <fieldset formGroupName="responsable">
-      <legend>Responsable</legend>
-
-      <div>
-        <label for="login">Login</label>
-        <input
-          id="Login"
-          type="text"
-          formControlName="Login">
-      </div>
-
-      <div>
-        <label for="password">password</label>
-        <input
-          id="password"
-          type="password"
-          formControlName="password">
-      </div>
-
-      
-    </fieldset>
-
-    
-
+  <div class="actions">
     <button type="submit" [disabled]="formCinemaGrp.invalid">
       {{ editingCinemaId ? 'Enregistrer les modifications' : 'Ajouter le cinéma' }}
     </button>
-
-    <button
-      type="button"
-      *ngIf="editingCinemaId"
-      (click)="annulerEdition()">
-      Annuler
-    </button>
-
-  </form>
+    <button type="button" class="secondaire" (click)="annulerEdition()">Annuler</button>
+  </div>
+</form>
 </section>
 
 
+}
 
 
-
+<!-- LISTE DES CINEMAS -->
 <!-- LISTE DES CINEMAS -->
 <section>
   <h2>Liste des cinémas</h2>
 
-  <div *ngIf="cinema$ | async as cinemas">
+  <p>Nombre de cinémas : {{ cinemas().length }}</p>
 
-    <p *ngIf="cinemas.length === 0">
-      Aucun cinéma enregistré.
-    </p>
+  <article *ngFor="let cinema of cinemas()">
+  <div class="info">
 
-    <article *ngFor="let cinema of cinemas">
+    <button
+      type="button"
+      class="supprimer"
+      title="Supprimer"
+      aria-label="Supprimer le cinéma"
+      (click)="supprimer(cinema)">
+      ✕
+    </button>
 
+    <div class="titre">
       <h3>{{ cinema.nom }}</h3>
 
-      <p>
-        Adresse :
-        {{ cinema.adresse?.numero }}
-        {{ cinema.adresse?.voie }},
-        {{ cinema.adresse?.cp }}
-        {{ cinema.adresse?.ville }}
-      </p>
-
-      <p>
-        Identifiant du responsable : {{ cinema.responsableId }}
-      </p>
-
-      <button type="button" (click)="editer(cinema)">
-        Modifier
+      <button
+        type="button"
+        class="voir-salles"
+        [class.ouvert]="cinemasOuvertId() === cinema.id"
+        aria-label="Voir les salles"
+        (click)="cinemaSelected(cinema)">
+        <span class="fleche">▼</span>
       </button>
+    </div>
 
-      <button type="button" (click)="supprimer(cinema)">
-        Supprimer
-      </button>
-
-    </article>
+    <p>
+      {{ cinema.adresse?.numero }}
+      {{ cinema.adresse?.voie }},
+      {{ cinema.adresse?.cp }}
+      {{ cinema.adresse?.ville }}
+    </p>
 
   </div>
+
+  @if (cinemasOuvertId() === cinema.id) {
+    
+    <app-salle-gestion [cinema]="cinema" />
+  }
+</article>
+  
 </section>

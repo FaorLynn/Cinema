@@ -9,6 +9,7 @@ interface SalleResponse {
     nom : string ;
     capacite_max : number ;
     Cinema : Cinema ;
+    type:string;
 }
 
 @Injectable({
@@ -28,13 +29,14 @@ export class SalleService {
           nom: account.nom,
           capacite_max: account.capacite_max,
           Cinema : account.Cinema,
+          type:account.type
         })),
       ),
     );
   }
 
   public save(account: Salle): Observable<Salle> {
-    const request = { id: account.id, nom: account.nom, capacite_max: account.capacite_max, Cinema : account.Cinema, };
+    const request = { id: account.id, nom: account.nom, capacite_max: account.capacite_max, cinemaId  : account.Cinema.id,type :account.type};
     if (account.id === undefined) {
       return this.http.post<Salle>(this.apiUrl, request);
     }
@@ -49,6 +51,10 @@ export class SalleService {
     return this.findAll().pipe(
         map(salles => salles.filter(salle => salle.capacite_max > 0))
     );
+  }
+  public findSallesByCinemaId(id: number): Observable<Salle[]>{
+    return this.http.get<Salle[]>(`${this.apiUrl}/cinema/${id}`); 
+
   }
 
 }
