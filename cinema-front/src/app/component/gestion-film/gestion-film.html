@@ -1,1 +1,90 @@
-<p>gestion-film works!</p>
+<div class="gestion-films">
+
+  <h2>Gestion des films</h2>
+
+  <!-- Bouton ajouter -->
+  <button
+    type="button"
+    class="ajouter"
+    (click)="ouvrirFormulaire()">
+    +
+  </button>
+
+  <!-- Formulaire d'ajout -->
+  @if (formulaireOuvert()) {
+    <form (ngSubmit)="ajouter()">
+
+      <h3>Ajouter un film</h3>
+
+      <div class="champ">
+        <label for="nom">Nom du film</label>
+        <input
+          id="nom"
+          type="text"
+          name="nom"
+          [(ngModel)]="nouveauFilm.nom"
+          placeholder="Ex : Interstellar"
+          required>
+      </div>
+
+      <div class="champ">
+        <label for="duree">Durée (en minutes)</label>
+        <input
+          id="duree"
+          type="number"
+          name="duree"
+          [(ngModel)]="nouveauFilm.dureeMinutes"
+          placeholder="Ex : 169"
+          min="1">
+      </div>
+
+      @if (erreur()) {
+        <p class="erreur">{{ erreur() }}</p>
+      }
+
+      <div class="actions">
+        <button type="button" class="secondaire"
+          (click)="fermerFormulaire()">
+          Annuler
+        </button>
+
+        <button type="submit">
+          Ajouter le film
+        </button>
+      </div>
+
+    </form>
+  }
+
+  <!-- Liste des films -->
+  <h3 class="titre-liste">
+    Films disponibles ({{ films().length }})
+  </h3>
+
+  @if (films().length === 0) {
+    <p class="vide">Aucun film dans le catalogue.</p>
+  }
+
+  <div class="liste-films">
+
+    @for (film of films(); track film.id) {
+      <article class="carte-film">
+
+        <div class="infos-film">
+          <h3>{{ film.nom }}</h3>
+          <p>{{ film.dureeMinutes }} minutes</p>
+        </div>
+
+        <button
+          type="button"
+          class="supprimer"
+          (click)="supprimer(film)">
+          ×
+        </button>
+
+      </article>
+    }
+
+  </div>
+
+</div>
